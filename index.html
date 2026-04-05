@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ardoise — Devis &amp; Facturation Professionnelle</title>
   <meta name="description" content="Ardoise est un logiciel de génération de devis et factures avec gestion de clients, disponible sur Windows 10/11 et Linux.">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
   <link rel="icon" type="image/png" href="icon/compact-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
 
     :root {
       --bg:           #111111;
@@ -539,9 +541,11 @@
       transition: background var(--ease), border-color var(--ease);
     }
     .dl-row:hover { background: rgba(255,255,255,.07); border-color: #424242; }
-    .dl-row-left { display: flex; align-items: center; gap: .5rem; }
+    .dl-row-left { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
     .dl-row-left svg { color: #666; flex-shrink: 0; }
     .dl-tag {
+      flex-basis: 100%;
+      text-align: center;
       padding: .12rem .48rem;
       background: rgba(255,255,255,.07);
       border-radius: 4px;
@@ -565,9 +569,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       padding: .9rem 1.4rem;
       border-bottom: 1px solid var(--border-sub);
-      gap: 1rem;
+      gap: .5rem 1rem;
     }
     .sha-head-left {
       display: flex;
@@ -586,7 +591,7 @@
     }
     .sha-row {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: minmax(0,auto) minmax(0,1fr) auto;
       align-items: center;
       gap: .9rem 1.4rem;
       padding: .75rem 1.4rem;
@@ -598,7 +603,9 @@
       font-size: .82rem;
       font-weight: 600;
       color: var(--text);
-      white-space: nowrap;
+      overflow-wrap: break-word;
+      word-break: break-all;
+      min-width: 0;
     }
     .sha-tag {
       padding: .12rem .48rem;
@@ -638,8 +645,13 @@
     .sha-copy-btn:hover { background: rgba(255,255,255,.1); color: var(--text); border-color: #484848; }
     .sha-copy-btn.copied { color: #4ade80; border-color: rgba(74,222,128,.35); background: rgba(74,222,128,.07); }
     @media (max-width: 680px) {
-      .sha-row { grid-template-columns: 1fr auto; }
+      .sha-row {
+        grid-template-columns: 1fr auto;
+        row-gap: .5rem;
+      }
+      .sha-filename { grid-column: 1 / -1; word-break: break-word; }
       .sha-hash { grid-column: 1 / -1; }
+      .sha-head-sub { font-size: .7rem; }
     }
 
     /* ─── CONTACT FORM ───────────────────────────────────── */
@@ -863,6 +875,7 @@
       .hero-pills { justify-content: center; }
       .nav-links { display: none; }
       .nav-hamburger { display: flex; }
+      .nav-inner .btn-primary { display: none; }
       .themes-grid { grid-template-columns: 1fr 1fr; }
       .dl-grid { grid-template-columns: 1fr; }
       .panel-bullets { grid-template-columns: 1fr 1fr; }
@@ -1232,8 +1245,8 @@
       </div>
       <div class="sha-row">
         <span class="sha-filename">Ardoise_0.100.0_x64-setup.exe</span>
-        <code class="sha-hash" title="SHA-256">9FC662AA8C76E7ECEF73CD1B1272452C71630A138EEA155D7378CC03E1B3EC16</code>
-        <button class="sha-copy-btn" onclick="copyHash(this,'9FC662AA8C76E7ECEF73CD1B1272452C71630A138EEA155D7378CC03E1B3EC16')" data-i18n="sha.copy">Copier</button>
+        <code class="sha-hash" title="SHA-256">a92190b87eac42ba08144aa25b0fb8d439313241ceebc2cafa732f89c8379e68</code>
+        <button class="sha-copy-btn" onclick="copyHash(this,'a92190b87eac42ba08144aa25b0fb8d439313241ceebc2cafa732f89c8379e68')" data-i18n="sha.copy">Copier</button>
       </div>
       <div class="sha-row">
         <span class="sha-filename">Ardoise_0.100.0_amd64.deb</span>
