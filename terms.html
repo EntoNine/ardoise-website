@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conditions d'utilisation — Ardoise</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #111;
+      --bg-card: #181818;
+      --text: #f0f0f0;
+      --text-muted: #888;
+      --border: #2a2a2a;
+      --r: 12px;
+      --ease: .18s ease;
+    }
+    html { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ─── TOP BAR ─── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(17,17,17,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.25rem, 4vw, 3rem);
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .topbar-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: var(--text); }
+    .topbar-logo img { height: 24px; }
+    .topbar-title { font-size: .85rem; font-weight: 500; color: var(--text-muted); }
+    .topbar-right { display: flex; align-items: center; gap: .75rem; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .8rem; font-weight: 600; color: var(--text-muted);
+      text-decoration: none; transition: color var(--ease);
+    }
+    .back-link:hover { color: var(--text); }
+    .lang-btn {
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      color: var(--text-muted); font-size: .72rem; font-weight: 700;
+      padding: .28rem .65rem; border-radius: 6px; cursor: pointer;
+      font-family: inherit; transition: all var(--ease);
+    }
+    .lang-btn:hover { background: rgba(255,255,255,.1); color: var(--text); }
+
+    /* ─── CONTENT ─── */
+    main {
+      flex: 1;
+      max-width: 820px; width: 100%;
+      margin: 2.5rem auto 4rem;
+      padding: 0 clamp(1.25rem, 4vw, 3rem);
+    }
+    .doc-title {
+      font-size: 1.35rem; font-weight: 700; margin-bottom: .35rem;
+    }
+    .doc-meta { font-size: .78rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .doc-body {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 2rem;
+      overflow: auto;
+    }
+    pre {
+      white-space: pre;
+      word-break: normal;
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: .80rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      min-width: max-content;
+    }
+    .loading { color: var(--text-muted); font-size: .85rem; padding: 2rem 0; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem clamp(1.25rem, 4vw, 3rem);
+      text-align: center;
+      font-size: .75rem;
+      color: var(--text-muted);
+    }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="topbar-logo">
+    <img src="icon/long-logo.png" alt="Ardoise">
+    <span class="topbar-title" id="pageLabel">Conditions d'utilisation</span>
+  </a>
+  <div class="topbar-right">
+    <a href="/" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      <span id="backLabel">Retour</span>
+    </a>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+  </div>
+</div>
+
+<main>
+  <div class="doc-title" id="docTitle">Conditions d'utilisation</div>
+  <div class="doc-meta" id="docMeta">Version 1.4 — Avril 2026</div>
+  <div class="doc-body">
+    <pre id="docContent"><span class="loading">Chargement…</span></pre>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 Ardoise Software — <a href="privacy.html" id="privacyLink">Politique de confidentialité</a></p>
+</footer>
+
+<script>
+  const FILES = {
+    fr: 'legal-documents/cgu-fr.txt',
+    en: 'legal-documents/tos-en.txt',
+  };
+  const LABELS = {
+    fr: {
+      page: "Conditions d'utilisation",
+      title: "Conditions d'utilisation",
+      meta: "Version 1.4 — Avril 2026",
+      back: "Retour",
+      privacy: "Politique de confidentialité",
+      loading: "Chargement…",
+      error: "Impossible de charger le document.",
+    },
+    en: {
+      page: "Terms of Service",
+      title: "Terms of Service",
+      meta: "Version 1.4 — April 2026",
+      back: "Back",
+      privacy: "Privacy Policy",
+      loading: "Loading…",
+      error: "Unable to load the document.",
+    }
+  };
+
+  let currentLang = localStorage.getItem('ardoise-lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
+
+  function applyLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('ardoise-lang', lang);
+    const l = LABELS[lang];
+    document.documentElement.lang = lang;
+    document.title = l.title + ' — Ardoise';
+    document.getElementById('pageLabel').textContent = l.page;
+    document.getElementById('docTitle').textContent = l.title;
+    document.getElementById('docMeta').textContent = l.meta;
+    document.getElementById('backLabel').textContent = l.back;
+    document.getElementById('privacyLink').textContent = l.privacy;
+    document.getElementById('langBtn').textContent = lang === 'fr' ? 'EN' : 'FR';
+    loadDoc(lang);
+  }
+
+  function toggleLang() {
+    applyLang(currentLang === 'fr' ? 'en' : 'fr');
+  }
+
+  function loadDoc(lang) {
+    const pre = document.getElementById('docContent');
+    pre.innerHTML = '<span class="loading">' + LABELS[lang].loading + '</span>';
+    fetch(FILES[lang])
+      .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+      .then(text => { pre.textContent = text; })
+      .catch(() => { pre.textContent = LABELS[lang].error; });
+  }
+
+  applyLang(currentLang);
+</script>
+</body>
+</html>
