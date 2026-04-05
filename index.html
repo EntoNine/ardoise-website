@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ardoise — Devis &amp; Facturation Professionnelle</title>
+  <meta name="description" content="Ardoise est un logiciel de génération de devis et factures avec gestion de clients, disponible sur Windows 10/11 et Linux.">
+  <link rel="icon" type="image/png" href="icon/compact-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #111111;
+      --bg-surface:   #171717;
+      --bg-card:      #1c1c1c;
+      --bg-card-h:    #222222;
+      --border:       #282828;
+      --border-sub:   #1f1f1f;
+      --text:         #f0f0f0;
+      --text-muted:   #787878;
+      --text-dim:     #444444;
+      --white:        #ffffff;
+      --silver-grad:  linear-gradient(135deg, #b0b0b0 0%, #f5f5f5 50%, #c8c8c8 100%);
+      --r:            16px;
+      --r-sm:         10px;
+      --r-xs:         7px;
+      --shadow:       0 4px 24px rgba(0,0,0,.5);
+      --shadow-lg:    0 20px 70px rgba(0,0,0,.65);
+      --ease:         0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(17,17,17,.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-sub);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 3rem);
+      gap: 1.5rem;
+    }
+
+    .nav-logo img { height: 28px; display: block; }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: .15rem;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 500;
+      padding: .38rem .85rem;
+      border-radius: var(--r-xs);
+      transition: color var(--ease), background var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.06); }
+
+    /* buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .5rem 1.15rem;
+      border-radius: var(--r-xs);
+      font-size: .875rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all var(--ease);
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--white); color: #111; }
+    .btn-primary:hover { background: #ddd; transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: #484848; background: rgba(255,255,255,.04); }
+    .btn-lg { padding: .8rem 1.85rem; font-size: .975rem; border-radius: var(--r-sm); }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: .35rem;
+      border-radius: var(--r-xs);
+      transition: background var(--ease);
+    }
+    .nav-hamburger:hover { background: rgba(255,255,255,.06); }
+
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      padding: .75rem clamp(1.25rem, 4vw, 3rem) 1rem;
+      border-top: 1px solid var(--border-sub);
+      gap: .1rem;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: .55rem 0;
+      border-bottom: 1px solid var(--border-sub);
+      transition: color var(--ease);
+    }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile a:hover { color: var(--text); }
+
+    /* ─── HERO ─────────────────────────────────────────── */
+    .hero-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: clamp(5rem, 10vw, 8.5rem) clamp(1.25rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem);
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      align-items: center;
+      gap: clamp(2.5rem, 5vw, 5rem);
+    }
+
+    /* subtle dot-grid background */
+    .hero-section {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .3rem .85rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 1.35rem;
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: blink 2.2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 55% { opacity:.25; } }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -.035em;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 .grad {
+      background: var(--silver-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 460px;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-pills {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .78rem;
+      color: var(--text-dim);
+    }
+    .pill svg { color: #555; }
+
+    /* browser mockup */
+    .hero-visual { position: relative; }
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: -60px;
+      background: radial-gradient(ellipse at 60% 40%, rgba(160,160,255,.055) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .browser {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.025);
+    }
+    .browser-bar {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .55rem .9rem;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .browser-dots { display: flex; gap: 5px; }
+    .bd { width: 10px; height: 10px; border-radius: 50%; }
+    .bd:nth-child(1) { background: #ff5f57; }
+    .bd:nth-child(2) { background: #febc2e; }
+    .bd:nth-child(3) { background: #28c840; }
+    .browser-url {
+      flex: 1;
+      height: 20px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border-sub);
+      border-radius: 4px;
+      margin: 0 .4rem;
+    }
+    .browser img { width: 100%; display: block; }
+
+    /* ─── SHARED SECTION STYLES ────────────────────────── */
+    section { padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 4vw, 3rem); }
+    .si { max-width: 1240px; margin: 0 auto; }
+
+    .s-label {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: .65rem;
+    }
+    .s-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.12;
+      color: var(--white);
+      margin-bottom: .7rem;
+    }
+    .s-sub {
+      font-size: 1.02rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.72;
+      margin-bottom: 3.25rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    /* ─── FEATURES ─────────────────────────────────────── */
+    #features { background: var(--bg-surface); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.15rem;
+    }
+
+    .f-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.7rem;
+      transition: border-color var(--ease), background var(--ease), transform .3s ease;
+    }
+    .f-card:hover {
+      background: var(--bg-card-h);
+      border-color: #363636;
+      transform: translateY(-3px);
+    }
+    .f-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--r-sm);
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.15rem;
+    }
+    .f-icon svg { width: 19px; height: 19px; color: #b8b8b8; }
+    .f-title { font-size: .97rem; font-weight: 700; color: var(--white); margin-bottom: .4rem; }
+    .f-desc { font-size: .845rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ─── APP PREVIEW ───────────────────────────────────── */
+    #preview { background: var(--bg); }
+
+    .tabs {
+      display: flex;
+      gap: .45rem;
+      margin-bottom: 1.75rem;
+    }
+    .tab {
+      padding: .5rem 1.1rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--r-xs);
+      color: var(--text-muted);
+      font-size: .855rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--ease);
+      font-family: inherit;
+    }
+    .tab:hover { border-color: #444; color: var(--text); }
+    .tab.active {
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.18);
+      color: var(--white);
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .panel-bullets {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.85rem;
+    }
+    .pb {
+      display: flex;
+      align-items: flex-start;
+      gap: .65rem;
+    }
+    .pb-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--r-xs);
+      background: rgba(255,255,255,.045);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pb-icon svg { width: 14px; height: 14px; color: #888; }
+    .pb h4 { font-size: .84rem; font-weight: 600; color: var(--text); margin-bottom: .18rem; }
+    .pb p { font-size: .78rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* ─── THEMES ────────────────────────────────────────── */
+    #themes { background: var(--bg-surface); }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.6rem;
+    }
+
+    .t-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      cursor: default;
+      transition: border-color var(--ease), transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+    }
+    .t-card:hover {
+      border-color: #404040;
+      transform: translateY(-7px);
+      box-shadow: 0 24px 64px rgba(0,0,0,.55);
+    }
+    .t-preview {
+      aspect-ratio: 210 / 297;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+    .t-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+    .t-info {
+      padding: 1.2rem 1.4rem 1.35rem;
+      border-top: 1px solid var(--border);
+    }
+    .t-name {
+      font-size: .97rem;
+      font-weight: 700;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .25rem;
+    }
+    .t-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .t-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* ─── DOWNLOAD ──────────────────────────────────────── */
+    #download { background: var(--bg); }
+
+    .dl-notice {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(74,222,128,.07);
+      border: 1px solid rgba(74,222,128,.2);
+      color: #4ade80;
+      padding: .45rem 1rem;
+      border-radius: var(--r-xs);
+      font-size: .785rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      margin-bottom: 2.5rem;
+    }
+
+    .dl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .dl-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.9rem 1.9rem 1.75rem;
+      transition: border-color var(--ease);
+    }
+    .dl-card:hover { border-color: #363636; }
+
+    .dl-head {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin-bottom: 1.5rem;
+    }
+    .dl-platform-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      flex-shrink: 0;
+    }
+    .dl-platform-icon svg { width: 20px; height: 20px; color: #aaa; }
+    .dl-pname { font-size: 1.05rem; font-weight: 700; color: var(--white); }
+    .dl-psub { font-size: .78rem; color: var(--text-muted); margin-top: .1rem; }
+
+    .dl-list { display: flex; flex-direction: column; gap: .55rem; }
+
+    .dl-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .65rem 1rem;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xs);
+      color: var(--text);
+      text-decoration: none;
+      font-size: .855rem;
+      font-weight: 500;
+      transition: background var(--ease), border-color var(--ease);
+    }
+    .dl-row:hover { background: rgba(255,255,255,.07); border-color: #424242; }
+    .dl-row-left { display: flex; align-items: center; gap: .5rem; }
+    .dl-row-left svg { color: #666; flex-shrink: 0; }
+    .dl-tag {
+      padding: .12rem .48rem;
+      background: rgba(255,255,255,.07);
+      border-radius: 4px;
+      font-size: .67rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .dl-arrow svg { width: 13px; height: 13px; color: #505050; }
+
+    /* ─── SHA-256 SECTION ───────────────────────────────── */
+    .sha-block {
+      margin-top: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+    .sha-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 1.4rem;
+      border-bottom: 1px solid var(--border-sub);
+      gap: 1rem;
+    }
+    .sha-head-left {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+    .sha-head-left svg { color: #666; flex-shrink: 0; }
+    .sha-head-title {
+      font-size: .83rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sha-head-sub {
+      font-size: .74rem;
+      color: var(--text-muted);
+    }
+    .sha-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: .9rem 1.4rem;
+      padding: .75rem 1.4rem;
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .sha-row:last-child { border-bottom: none; }
+    .sha-row:nth-child(even) { background: rgba(255,255,255,.018); }
+    .sha-filename {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .sha-tag {
+      padding: .12rem .48rem;
+      background: rgba(255,255,255,.07);
+      border-radius: 4px;
+      font-size: .67rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .sha-hash {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: .735rem;
+      color: var(--text-muted);
+      word-break: break-all;
+      cursor: text;
+      user-select: all;
+      transition: color var(--ease);
+    }
+    .sha-hash:hover { color: var(--text); }
+    .sha-copy-btn {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xs);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: .7rem;
+      font-weight: 600;
+      font-family: inherit;
+      padding: .28rem .65rem;
+      transition: all var(--ease);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .sha-copy-btn:hover { background: rgba(255,255,255,.1); color: var(--text); border-color: #484848; }
+    .sha-copy-btn.copied { color: #4ade80; border-color: rgba(74,222,128,.35); background: rgba(74,222,128,.07); }
+    @media (max-width: 680px) {
+      .sha-row { grid-template-columns: 1fr auto; }
+      .sha-hash { grid-column: 1 / -1; }
+    }
+
+    /* ─── CONTACT FORM ───────────────────────────────────── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-label {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: .01em;
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xs);
+      color: var(--text);
+      font-family: inherit;
+      font-size: .875rem;
+      padding: .62rem .9rem;
+      outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: var(--text-dim); }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: #505050;
+      box-shadow: 0 0 0 3px rgba(255,255,255,.05);
+    }
+    .form-select { appearance: none; cursor: pointer; }
+    .form-select option { background: var(--bg-card); color: var(--text); }
+    .form-textarea { resize: vertical; min-height: 120px; }
+    .form-select-wrap { position: relative; }
+    .form-select-wrap::after {
+      content: '';
+      position: absolute;
+      right: .85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-muted);
+      pointer-events: none;
+    }
+    .form-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      width: 100%;
+      padding: .8rem 1.5rem;
+      background: var(--white);
+      color: #111;
+      border: none;
+      border-radius: var(--r-xs);
+      font-family: inherit;
+      font-size: .925rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--ease), transform .15s ease;
+      margin-top: .5rem;
+    }
+    .form-submit:hover:not(:disabled) { background: #ddd; transform: translateY(-1px); }
+    .form-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .form-msg {
+      display: none;
+      align-items: center;
+      gap: .55rem;
+      padding: .8rem 1.1rem;
+      border-radius: var(--r-xs);
+      font-size: .84rem;
+      font-weight: 500;
+      margin-top: .75rem;
+    }
+    .form-msg.success {
+      display: flex;
+      background: rgba(74,222,128,.08);
+      border: 1px solid rgba(74,222,128,.25);
+      color: #4ade80;
+    }
+    .form-msg.error {
+      display: flex;
+      background: rgba(248,113,113,.08);
+      border: 1px solid rgba(248,113,113,.25);
+      color: #f87171;
+    }
+    .spinner {
+      width: 15px; height: 15px;
+      border: 2px solid rgba(0,0,0,.2);
+      border-top-color: #111;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #contact { background: var(--bg); }
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.55fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+    }
+    .contact-aside .s-title { margin-bottom: .65rem; }
+    .contact-aside .s-sub { margin-bottom: 2rem; }
+    .contact-perks { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-perk {
+      display: flex;
+      align-items: flex-start;
+      gap: .7rem;
+    }
+    .contact-perk-icon {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xs);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-perk-icon svg { width: 14px; height: 14px; color: #888; }
+    .contact-perk h4 { font-size: .85rem; font-weight: 700; color: var(--text); margin-bottom: .15rem; }
+    .contact-perk p { font-size: .78rem; color: var(--text-muted); line-height: 1.55; margin: 0; }
+    .contact-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 2rem 2.1rem;
+    }
+    @media (max-width: 820px) {
+      .contact-wrap { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: auto; }
+    }
+
+    /* ─── FOOTER ────────────────────────────────────────── */
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 3rem clamp(1.25rem, 4vw, 3rem) 2rem;
+    }
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      padding-bottom: 2rem;
+      margin-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .footer-brand img { height: 26px; display: block; margin-bottom: .7rem; }
+    .footer-brand p { font-size: .82rem; color: var(--text-muted); max-width: 250px; line-height: 1.6; }
+
+    .footer-col h4 {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: .75rem;
+    }
+    .footer-col { display: flex; flex-direction: column; gap: .45rem; }
+    .footer-col a {
+      font-size: .84rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--ease);
+    }
+    .footer-col a:hover { color: var(--text); }
+
+    .footer-bottom {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-copy { font-size: .79rem; color: var(--text-dim); }
+    .footer-legal { display: flex; gap: 1.25rem; }
+    .footer-legal a {
+      font-size: .79rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color var(--ease);
+    }
+    .footer-legal a:hover { color: var(--text-muted); }
+
+    /* ─── SCROLL ANIMATION ──────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .fade-up:nth-child(1) { transition-delay: 0s; }
+    .fade-up:nth-child(2) { transition-delay: .08s; }
+    .fade-up:nth-child(3) { transition-delay: .16s; }
+    .fade-up:nth-child(4) { transition-delay: .24s; }
+    .fade-up:nth-child(5) { transition-delay: .32s; }
+    .fade-up:nth-child(6) { transition-delay: .4s; }
+
+    /* ─── RESPONSIVE ────────────────────────────────────── */
+    @media (max-width: 980px) {
+      .hero-wrap { grid-template-columns: 1fr; text-align: center; gap: 2.75rem; }
+      .hero-desc { max-width: 100%; }
+      .hero-actions { justify-content: center; }
+      .hero-pills { justify-content: center; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .themes-grid { grid-template-columns: 1fr 1fr; }
+      .dl-grid { grid-template-columns: 1fr; }
+      .panel-bullets { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .themes-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+      .panel-bullets { grid-template-columns: 1fr; gap: 1.1rem; }
+      .footer-inner { flex-direction: column; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    }
+
+    /* ─── LANG BUTTON ──────────────────────────────────── */
+    .lang-btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: .74rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      padding: .3rem .7rem;
+      border-radius: var(--r-xs);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--ease);
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,.11); color: var(--text); border-color: #484848; }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVIGATION ─────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" aria-label="Ardoise">
+      <img src="icon/long-logo.png" alt="Ardoise">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features" data-i18n="nav.features">Fonctionnalités</a></li>
+      <li><a href="#preview" data-i18n="nav.preview">Aperçu</a></li>
+      <li><a href="#themes" data-i18n="nav.designs">Designs</a></li>
+      <li><a href="#download" data-i18n="nav.download">Téléchargement</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:.65rem;">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+      <a href="#download" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-i18n="nav.download_btn">Télécharger</span>
+      </a>
+      <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="#features" onclick="closeNav()" data-i18n="nav.features">Fonctionnalités</a>
+    <a href="#preview"  onclick="closeNav()" data-i18n="nav.preview">Aperçu</a>
+    <a href="#themes"   onclick="closeNav()" data-i18n="nav.designs">Designs</a>
+    <a href="#download" onclick="closeNav()" data-i18n="nav.download">Téléchargement</a>
+    <a href="#contact"  onclick="closeNav()" data-i18n="nav.contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ───────────────────────────────────────────── -->
+<div class="hero-section">
+  <div class="hero-wrap">
+    <div class="hero">
+      <div class="hero-badge"><span class="badge-dot"></span><span data-i18n="hero.badge">Version Bêta Utilisateurs</span></div>
+      <h1><span data-i18n="hero.h1">Devis &amp; Factures</span><br><span class="grad" data-i18n="hero.h1_grad">sans friction.</span></h1>
+      <p class="hero-desc" data-i18n="hero.desc">Créez, personnalisez et exportez des devis et factures professionnels en quelques clics. Gérez vos clients, suivez votre pipeline et gardez le contrôle de votre activité.</p>
+      <div class="hero-actions">
+        <a href="#download" class="btn btn-primary btn-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="hero.btn_dl">Télécharger gratuitement</span>
+        </a>
+        <a href="#preview" class="btn btn-ghost btn-lg"><span data-i18n="hero.btn_preview">Voir l'aperçu</span></a>
+      </div>
+      <div class="hero-pills">
+        <span class="pill">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Windows 10 / 11
+        </span>
+        <span class="pill">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Linux (deb · rpm · AppImage)
+        </span>
+        <span class="pill">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span data-i18n="hero.pill_proprietary">Logiciel propriétaire</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <div class="bd"></div><div class="bd"></div><div class="bd"></div>
+          </div>
+          <div class="browser-url"></div>
+        </div>
+        <img src="software-presentation/Dashboard.png" alt="Tableau de bord Ardoise">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── FEATURES ──────────────────────────────────────── -->
+<section id="features">
+  <div class="si">
+    <span class="s-label" data-i18n="features.label">Fonctionnalités</span>
+    <h2 class="s-title" data-i18n="features.title">Tout ce dont vous avez besoin</h2>
+    <p class="s-sub" data-i18n="features.sub">Un outil complet pensé pour les indépendants et les petites entreprises qui veulent aller vite et rester organisés.</p>
+    <div class="features-grid">
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <div class="f-title" data-i18n="features.app.title">Devis &amp; Factures</div>
+        <p class="f-desc" data-i18n="features.app.desc">Créez des documents professionnels en quelques secondes. Numérotation automatique, suivi de statut : brouillon, envoyé, accepté, refusé, expiré.</p>
+      </div>
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="f-title" data-i18n="features.clients.title">Gestion des Clients</div>
+        <p class="f-desc" data-i18n-html="features.clients.html">Centralisez toutes vos informations clients. Retrouvez l'historique complet des devis et exportez l'intégralité de votre base clients en <strong style="color:var(--text);font-weight:600;">.xlsx</strong> en un clic.</p>
+      </div>
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2c5.52 0 10 4.5 10 10S17.5 22 12 22z"/></svg></div>
+        <div class="f-title" data-i18n="features.design.title">Design Entièrement Libre</div>
+        <p class="f-desc" data-i18n="features.design.desc">Personnalisez tout : couleurs, typographie, logo, espacements et mise en page. Les styles d'exemple servent de point de départ — le résultat final, c'est le vôtre.</p>
+      </div>
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+        <div class="f-title" data-i18n="features.pdf.title">Export PDF</div>
+        <p class="f-desc" data-i18n="features.pdf.desc">Exportez vos documents en PDF haute qualité prêts à être envoyés à vos clients. Impression directe depuis l'application incluse.</p>
+      </div>
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="f-title" data-i18n="features.dashboard.title">Tableau de Bord</div>
+        <p class="f-desc" data-i18n="features.dashboard.desc">Visualisez votre pipeline, taux d'acceptation, montants en attente et acceptés. Tout votre activité en un coup d'œil.</p>
+      </div>
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <div class="f-title" data-i18n="features.rates.title">Taux de Change</div>
+        <p class="f-desc" data-i18n="features.rates.desc">Consultez les taux de change USD, CAD, EUR en temps réel directement depuis votre tableau de bord, sans quitter l'application.</p>
+      </div>
+
+      <div class="f-card fade-up">
+        <div class="f-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <div class="f-title" data-i18n="features.bilingual.title">Interface Bilingue</div>
+        <p class="f-desc" data-i18n="features.bilingual.desc">L'application est entièrement disponible en français et en anglais. Changez de langue à tout moment depuis les paramètres.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── APP PREVIEW ────────────────────────────────────── -->
+<section id="preview">
+  <div class="si">
+    <span class="s-label" data-i18n="preview.label">Aperçu</span>
+    <h2 class="s-title" data-i18n="preview.title">Conçu pour la productivité</h2>
+    <p class="s-sub" data-i18n="preview.sub">Une interface sombre et intuitive, pensée pour aller vite. Aucun superflu, que l'essentiel.</p>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(this,'p-dashboard')" data-i18n="preview.tab_dashboard">Tableau de bord</button>
+      <button class="tab"        onclick="switchTab(this,'p-design')" data-i18n="preview.tab_design">Éditeur de design</button>
+    </div>
+
+    <!-- Tab: dashboard -->
+    <div id="p-dashboard" class="panel active">
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="browser-dots"><div class="bd"></div><div class="bd"></div><div class="bd"></div></div>
+          <div class="browser-url"></div>
+        </div>
+        <img src="software-presentation/Dashboard.png" alt="Tableau de bord Ardoise">
+      </div>
+      <div class="panel-bullets">
+        <div class="pb">
+          <div class="pb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div><h4 data-i18n="preview.pb1.title">Pipeline en temps réel</h4><p data-i18n="preview.pb1.desc">Suivez l'avancement de vos devis de la rédaction à l'acceptation.</p></div>
+        </div>
+        <div class="pb">
+          <div class="pb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><h4 data-i18n="preview.pb2.title">Répartition visuelle</h4><p data-i18n="preview.pb2.desc">Graphique circulaire par statut : brouillon, envoyé, accepté, refusé, expiré.</p></div>
+        </div>
+        <div class="pb">
+          <div class="pb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div><h4 data-i18n="preview.pb3.title">Taux de change live</h4><p data-i18n="preview.pb3.desc">Paires USD, CAD, EUR mises à jour automatiquement depuis votre bureau.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: design editor -->
+    <div id="p-design" class="panel">
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="browser-dots"><div class="bd"></div><div class="bd"></div><div class="bd"></div></div>
+          <div class="browser-url"></div>
+        </div>
+        <img src="software-presentation/Design-Maker.png" alt="Éditeur de design Ardoise">
+      </div>
+      <div class="panel-bullets">
+        <div class="pb">
+          <div class="pb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2c5.52 0 10 4.5 10 10S17.5 22 12 22z"/></svg></div>
+          <div><h4 data-i18n="preview.pb4.title">Couleurs personnalisées</h4><p data-i18n="preview.pb4.desc">Primaire, secondaire, texte, accent, fond de ligne — tout est configurable.</p></div>
+        </div>
+        <div class="pb">
+          <div class="pb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
+          <div><h4 data-i18n="preview.pb5.title">Typographie &amp; Logo</h4><p data-i18n="preview.pb5.desc">Choisissez votre police, ajustez la taille et intégrez votre logo d'entreprise.</p></div>
+        </div>
+        <div class="pb">
+          <div class="pb-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div><h4 data-i18n="preview.pb6.title">Import / Export JSON</h4><p data-i18n="preview.pb6.desc">Sauvegardez et partagez vos configurations entre différentes installations.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── THEMES ─────────────────────────────────────────── -->
+<section id="themes">
+  <div class="si">
+    <span class="s-label" data-i18n="themes.label">Styles de documents</span>
+    <h2 class="s-title" data-i18n="themes.title">Des exemples parmi mille possibilités</h2>
+    <p class="s-sub" data-i18n="themes.sub">Ces aperçus illustrent ce que vous pouvez créer avec Ardoise. Logo, couleurs, espacements, typographie — chaque élément est personnalisable. Le rendu final reflète exactement votre identité visuelle.</p>
+    <div class="themes-grid">
+
+      <div class="t-card fade-up">
+        <div class="t-preview">
+          <img src="preview-quote-pdf/preview-quote-style-2.png" alt="Aperçu style Minimaliste">
+        </div>
+        <div class="t-info">
+          <div class="t-name"><span class="t-dot" style="background:#7a7a7a;"></span><span data-i18n="themes.t1.name">Minimaliste</span></div>
+          <p class="t-desc" data-i18n="themes.t1.desc">Exemple épuré : fond sombre, typographie resserrée, mise en page minimaliste. Entièrement personnalisable.</p>
+        </div>
+      </div>
+
+      <div class="t-card fade-up">
+        <div class="t-preview">
+          <img src="preview-quote-pdf/preview-quote-style-3.png" alt="Aperçu style Corporatif">
+        </div>
+        <div class="t-info">
+          <div class="t-name"><span class="t-dot" style="background:#1e3a5f;"></span><span data-i18n="themes.t2.name">Corporatif</span></div>
+          <p class="t-desc" data-i18n="themes.t2.desc">Exemple structuré : bleu marine, en-têtes affirmés, colonnes détaillées. Adaptez chaque couleur à votre charte.</p>
+        </div>
+      </div>
+
+      <div class="t-card fade-up">
+        <div class="t-preview">
+          <img src="preview-quote-pdf/preview-quote-style-1.png" alt="Aperçu style Moderne">
+        </div>
+        <div class="t-info">
+          <div class="t-name"><span class="t-dot" style="background:#7c3aed;"></span><span data-i18n="themes.t3.name">Moderne</span></div>
+          <p class="t-desc" data-i18n="themes.t3.desc">Exemple dynamique : violet vif, mise en page moderne. Remplacez la teinte par n'importe quelle couleur de votre marque.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── DOWNLOAD ───────────────────────────────────────── -->
+<section id="download">
+  <div class="si">
+    <span class="s-label" data-i18n="download.label">Téléchargement</span>
+    <h2 class="s-title" data-i18n="download.title">Disponible sur vos plateformes</h2>
+    <p class="s-sub" data-i18n="download.sub">Ardoise tourne nativement sur Windows et Linux. Choisissez le format adapté à votre environnement.</p>
+
+    <div class="dl-notice">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <span data-i18n="download.notice">Version de test utilisateurs — Vos retours sont les bienvenus</span>
+    </div>
+
+    <div class="dl-grid">
+
+      <!-- Windows -->
+      <div class="dl-card">
+        <div class="dl-head">
+          <div class="dl-platform-icon">
+            <!-- Windows logo (4-pane) -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" fill="currentColor"><path d="M0 12.4 35.7 7.5l.02 34.4-35.7.2Zm35.7 33.5.03 34.4L.03 75.5l-.01-29.8Zm4.3-39L87.3 0v41.5l-47.3.38Zm47.33 39.35L87.3 86.7l-47.32-6.68-.06-34.74Z"/></svg>
+          </div>
+          <div>
+            <div class="dl-pname">Windows</div>
+            <div class="dl-psub">Windows 10 / 11 — 64-bit</div>
+          </div>
+        </div>
+        <div class="dl-list">
+          <a href="app-download/Ardoise_0.100.0_x64-setup.exe" class="dl-row">
+            <span class="dl-row-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Ardoise_0.100.0_x64-setup.exe
+              <span class="dl-tag">Installer</span>
+            </span>
+            <span class="dl-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Linux -->
+      <div class="dl-card">
+        <div class="dl-head">
+          <div class="dl-platform-icon">
+            <!-- Terminal icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <div>
+            <div class="dl-pname">Linux</div>
+            <div class="dl-psub" data-i18n="download.linux.sub">Debian · Fedora · Universel</div>
+          </div>
+        </div>
+        <div class="dl-list">
+          <a href="app-download/Ardoise_0.100.0_amd64.deb" class="dl-row">
+            <span class="dl-row-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Ardoise_0.100.0_amd64.deb
+              <span class="dl-tag">Ubuntu · Debian</span>
+            </span>
+            <span class="dl-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </a>
+          <a href="app-download/Ardoise-0.100.0-1.x86_64.rpm" class="dl-row">
+            <span class="dl-row-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Ardoise-0.100.0-1.x86_64.rpm
+              <span class="dl-tag">Fedora · RHEL</span>
+            </span>
+            <span class="dl-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </a>
+          <a href="app-download/Ardoise_0.100.0_amd64.AppImage" class="dl-row">
+            <span class="dl-row-left">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Ardoise_0.100.0_amd64.AppImage
+              <span class="dl-tag" data-i18n="download.tag.universal">Universel</span>
+            </span>
+            <span class="dl-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <!-- SHA-256 block -->
+    <div class="sha-block">
+      <div class="sha-head">
+        <div class="sha-head-left">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span class="sha-head-title" data-i18n="sha.title">Sommes de contrôle SHA-256</span>
+        </div>
+        <span class="sha-head-sub" data-i18n="sha.sub">Cliquez sur le hash pour sélectionner — Copier pour verifier</span>
+      </div>
+      <div class="sha-row">
+        <span class="sha-filename">Ardoise_0.100.0_x64-setup.exe</span>
+        <code class="sha-hash" title="SHA-256">a92190b87eac42ba08144aa25b0fb8d439313241ceebc2cafa732f89c8379e68</code>
+        <button class="sha-copy-btn" onclick="copyHash(this,'a92190b87eac42ba08144aa25b0fb8d439313241ceebc2cafa732f89c8379e68')" data-i18n="sha.copy">Copier</button>
+      </div>
+      <div class="sha-row">
+        <span class="sha-filename">Ardoise_0.100.0_amd64.deb</span>
+        <code class="sha-hash" title="SHA-256">68d3e37a2680a9d4080236bfd966790a5dec802f12bf6f6ea5ede939e846bec7</code>
+        <button class="sha-copy-btn" onclick="copyHash(this,'68d3e37a2680a9d4080236bfd966790a5dec802f12bf6f6ea5ede939e846bec7')" data-i18n="sha.copy">Copier</button>
+      </div>
+      <div class="sha-row">
+        <span class="sha-filename">Ardoise-0.100.0-1.x86_64.rpm</span>
+        <code class="sha-hash" title="SHA-256">3541f2b203f70185bead01f3484b8083a86c793c71a86a08d73aa50bbf45b6eb</code>
+        <button class="sha-copy-btn" onclick="copyHash(this,'3541f2b203f70185bead01f3484b8083a86c793c71a86a08d73aa50bbf45b6eb')" data-i18n="sha.copy">Copier</button>
+      </div>
+      <div class="sha-row">
+        <span class="sha-filename">Ardoise_0.100.0_amd64.AppImage</span>
+        <code class="sha-hash" title="SHA-256">4ae1b32409aa05045705fd93259c3f6f36090292c9451f6da2ea6541058c42d7</code>
+        <button class="sha-copy-btn" onclick="copyHash(this,'4ae1b32409aa05045705fd93259c3f6f36090292c9451f6da2ea6541058c42d7')" data-i18n="sha.copy">Copier</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── CONTACT ─────────────────────────────────────────── -->
+<section id="contact">
+  <div class="si">
+    <div class="contact-wrap">
+
+      <!-- aside -->
+      <div class="contact-aside">
+        <span class="s-label" data-i18n="contact.label">Contact</span>
+        <h2 class="s-title" data-i18n="contact.title">Dites-nous ce que vous pensez</h2>
+        <p class="s-sub" data-i18n="contact.sub">Un bug, une idée, une question ? On lit tout et on répond.</p>
+        <div class="contact-perks">
+          <div class="contact-perk">
+            <div class="contact-perk-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div><h4 data-i18n="contact.perk1.title">Retours utilisateurs</h4><p data-i18n="contact.perk1.desc">Vous êtes en version bêta — votre avis guide directement le développement.</p></div>
+          </div>
+          <div class="contact-perk">
+            <div class="contact-perk-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+            <div><h4 data-i18n="contact.perk2.title">Signalement de bugs</h4><p data-i18n="contact.perk2.desc">Un problème rencontré ? Décrivez-le, on s'en occupe rapidement.</p></div>
+          </div>
+          <div class="contact-perk">
+            <div class="contact-perk-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div><h4 data-i18n="contact.perk3.title">Suggestions</h4><p data-i18n="contact.perk3.desc">Une fonctionnalité manquante ? Proposez-la, on évalue chaque idée.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- form card -->
+      <div class="contact-form-card">
+        <form id="contactForm" novalidate>
+          <!-- honeypot: invisible for humans, bots fill it in -->
+          <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+            <label for="cf-website">Website</label>
+            <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label class="form-label" for="cf-name" data-i18n="contact.field.name">Nom</label>
+              <input class="form-input" id="cf-name" name="name" type="text"
+                data-i18n-ph="contact.ph.name" placeholder="Jean Dupont" autocomplete="name">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cf-email" data-i18n="contact.field.email">E-mail</label>
+              <input class="form-input" id="cf-email" name="email" type="email"
+                data-i18n-ph="contact.ph.email" placeholder="jean@exemple.com" autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cf-type" data-i18n="contact.field.type">Type</label>
+              <div class="form-select-wrap">
+                <select class="form-select" id="cf-type" name="type">
+                  <option value="feedback" data-i18n="contact.type.feedback">Retour utilisateur</option>
+                  <option value="bug"      data-i18n="contact.type.bug">Signalement de bug</option>
+                  <option value="feature"  data-i18n="contact.type.feature">Suggestion</option>
+                  <option value="other"    data-i18n="contact.type.other">Autre</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cf-os" data-i18n="contact.field.os">Plateforme</label>
+              <div class="form-select-wrap">
+                <select class="form-select" id="cf-os" name="os">
+                  <option value="windows">Windows 10 / 11</option>
+                  <option value="deb">Linux — .deb</option>
+                  <option value="rpm">Linux — .rpm</option>
+                  <option value="appimage">Linux — AppImage</option>
+                  <option value="other" data-i18n="contact.type.other">Autre</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label" for="cf-msg" data-i18n="contact.field.message">Message</label>
+              <textarea class="form-textarea" id="cf-msg" name="message"
+                data-i18n-ph="contact.ph.message" placeholder="Décrivez votre retour…"></textarea>
+            </div>
+
+          </div>
+
+          <button type="submit" class="form-submit" id="cfSubmit">
+            <span id="cfBtnText" data-i18n="contact.btn">Envoyer</span>
+          </button>
+
+          <div class="form-msg success" id="cfSuccess" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-i18n="contact.success">Message envoyé ! Merci pour votre retour.</span>
+          </div>
+          <div class="form-msg error" id="cfError" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-i18n="contact.error">Une erreur est survenue. Veuillez réessayer.</span>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="icon/long-logo.png" alt="Ardoise">
+      <p data-i18n="footer.desc">Générateur de devis &amp; factures et gestion de clients pour indépendants et petites entreprises.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.nav_title">Navigation</h4>
+      <a href="#features" data-i18n="footer.features">Fonctionnalités</a>
+      <a href="#preview" data-i18n="footer.preview">Aperçu</a>
+      <a href="#themes" data-i18n="footer.styles">Styles</a>
+      <a href="#download" data-i18n="footer.download">Téléchargement</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer.res_title">Ressources</h4>
+      <a href="#download" data-i18n="footer.download">Téléchargement</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy" data-i18n="footer.copy">© 2026 Ardoise. Tous droits réservés. Logiciel propriétaire.</p>
+    <div class="footer-legal">
+      <a href="#" data-i18n="footer.terms">Conditions d'utilisation</a>
+      <a href="#" data-i18n="footer.privacy">Politique de confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ─── I18N ─────────────────────────────────────────── */
+  const LANGS = {
+    fr: {
+      'meta.title':               'Ardoise — Devis & Facturation Professionnelle',
+      'meta.desc':                'Ardoise est un logiciel de génération de devis et factures avec gestion de clients, disponible sur Windows 10/11 et Linux.',
+      'nav.features':             'Fonctionnalités',
+      'nav.preview':              'Aperçu',
+      'nav.designs':              'Designs',
+      'nav.download':             'Téléchargement',
+      'nav.download_btn':         'Télécharger',
+      'nav.contact':             'Contact',
+      'hero.badge':               'Version Bêta Utilisateurs',
+      'hero.h1':                  'Devis & Factures',
+      'hero.h1_grad':             'sans friction.',
+      'hero.desc':                'Créez, personnalisez et exportez des devis et factures professionnels en quelques clics. Gérez vos clients, suivez votre pipeline et gardez le contrôle de votre activité.',
+      'hero.btn_dl':              'Télécharger gratuitement',
+      'hero.btn_preview':         "Voir l'aperçu",
+      'hero.pill_proprietary':    'Logiciel propriétaire',
+      'features.label':           'Fonctionnalités',
+      'features.title':           'Tout ce dont vous avez besoin',
+      'features.sub':             'Un outil complet pensé pour les indépendants et les petites entreprises qui veulent aller vite et rester organisés.',
+      'features.app.title':       'Devis & Factures',
+      'features.app.desc':        'Créez des documents professionnels en quelques secondes. Numérotation automatique, suivi de statut : brouillon, envoyé, accepté, refusé, expiré.',
+      'features.clients.title':   'Gestion des Clients',
+      'features.clients.html':    'Centralisez toutes vos informations clients. Retrouvez l\'historique complet des devis et exportez l\'intégralité de votre base clients en <strong style="color:var(--text);font-weight:600;">.xlsx</strong> en un clic.',
+      'features.design.title':    'Design Entièrement Libre',
+      'features.design.desc':     "Personnalisez tout : couleurs, typographie, logo, espacements et mise en page. Les styles d'exemple servent de point de départ — le résultat final, c'est le vôtre.",
+      'features.pdf.title':       'Export PDF',
+      'features.pdf.desc':        "Exportez vos documents en PDF haute qualité prêts à être envoyés à vos clients. Impression directe depuis l'application incluse.",
+      'features.dashboard.title': 'Tableau de Bord',
+      'features.dashboard.desc':  "Visualisez votre pipeline, taux d'acceptation, montants en attente et acceptés. Tout votre activité en un coup d'œil.",
+      'features.rates.title':     'Taux de Change',
+      'features.rates.desc':      "Consultez les taux de change USD, CAD, EUR en temps réel directement depuis votre tableau de bord, sans quitter l'application.",
+      'features.bilingual.title': 'Interface Bilingue',
+      'features.bilingual.desc':  "L'application est entièrement disponible en français et en anglais. Changez de langue à tout moment depuis les paramètres.",
+      'preview.label':            'Aperçu',
+      'preview.title':            'Conçu pour la productivité',
+      'preview.sub':              "Une interface sombre et intuitive, pensée pour aller vite. Aucun superflu, que l'essentiel.",
+      'preview.tab_dashboard':    'Tableau de bord',
+      'preview.tab_design':       'Éditeur de design',
+      'preview.pb1.title':        'Pipeline en temps réel',
+      'preview.pb1.desc':         "Suivez l'avancement de vos devis de la rédaction à l'acceptation.",
+      'preview.pb2.title':        'Répartition visuelle',
+      'preview.pb2.desc':         'Graphique circulaire par statut : brouillon, envoyé, accepté, refusé, expiré.',
+      'preview.pb3.title':        'Taux de change live',
+      'preview.pb3.desc':         'Paires USD, CAD, EUR mises à jour automatiquement depuis votre bureau.',
+      'preview.pb4.title':        'Couleurs personnalisées',
+      'preview.pb4.desc':         'Primaire, secondaire, texte, accent, fond de ligne — tout est configurable.',
+      'preview.pb5.title':        'Typographie & Logo',
+      'preview.pb5.desc':         "Choisissez votre police, ajustez la taille et intégrez votre logo d'entreprise.",
+      'preview.pb6.title':        'Import / Export JSON',
+      'preview.pb6.desc':         'Sauvegardez et partagez vos configurations entre différentes installations.',
+      'themes.label':             'Styles de documents',
+      'themes.title':             'Des exemples parmi mille possibilités',
+      'themes.sub':               'Ces aperçus illustrent ce que vous pouvez créer avec Ardoise. Logo, couleurs, espacements, typographie — chaque élément est personnalisable. Le rendu final reflète exactement votre identité visuelle.',
+      'themes.t1.name':           'Minimaliste',
+      'themes.t1.desc':           'Exemple épuré : fond sombre, typographie resserrée, mise en page minimaliste. Entièrement personnalisable.',
+      'themes.t2.name':           'Corporatif',
+      'themes.t2.desc':           'Exemple structuré : bleu marine, en-têtes affirmés, colonnes détaillées. Adaptez chaque couleur à votre charte.',
+      'themes.t3.name':           'Moderne',
+      'themes.t3.desc':           "Exemple dynamique : violet vif, mise en page moderne. Remplacez la teinte par n'importe quelle couleur de votre marque.",
+      'download.label':           'Téléchargement',
+      'download.title':           'Disponible sur vos plateformes',
+      'download.sub':             'Ardoise tourne nativement sur Windows et Linux. Choisissez le format adapté à votre environnement.',
+      'download.notice':          'Version de test utilisateurs — Vos retours sont les bienvenus',
+      'download.linux.sub':       'Debian · Fedora · Universel',
+      'download.tag.universal':   'Universel',
+      'sha.title':                'Sommes de contrôle SHA-256',
+      'sha.sub':                  'Cliquez sur le hash pour sélectionner — Copiez pour vérifier',
+      'sha.copy':                 'Copier',
+      'sha.copied':               'Copié !',
+      'contact.label':            'Contact',
+      'contact.title':            'Dites-nous ce que vous pensez',
+      'contact.sub':              'Un bug, une idée, une question ? On lit tout et on répond.',
+      'contact.perk1.title':      'Retours utilisateurs',
+      'contact.perk1.desc':       'Vous êtes en version béta — votre avis guide directement le développement.',
+      'contact.perk2.title':      'Signalement de bugs',
+      'contact.perk2.desc':       "Un problème rencontré ? Décrivez-le, on s'en occupe rapidement.",
+      'contact.perk3.title':      'Suggestions',
+      'contact.perk3.desc':       'Une fonctionnalité manquante ? Proposez-la, on évalue chaque idée.',
+      'contact.field.name':       'Nom',
+      'contact.field.email':      'E-mail',
+      'contact.field.type':       'Type',
+      'contact.field.os':         'Plateforme',
+      'contact.field.message':    'Message',
+      'contact.ph.name':          'Jean Dupont',
+      'contact.ph.email':         'jean@exemple.com',
+      'contact.ph.message':       'Décrivez votre retour…',
+      'contact.type.feedback':    'Retour utilisateur',
+      'contact.type.bug':         'Signalement de bug',
+      'contact.type.feature':     'Suggestion',
+      'contact.type.other':       'Autre',
+      'contact.btn':              'Envoyer',
+      'contact.success':          'Message envoyé ! Merci pour votre retour.',
+      'contact.error':            'Une erreur est survenue. Veuillez réessayer.',
+      'footer.desc':              'Générateur de devis & factures et gestion de clients pour indépendants et petites entreprises.',
+      'footer.nav_title':         'Navigation',
+      'footer.res_title':         'Ressources',
+      'footer.features':          'Fonctionnalités',
+      'footer.preview':           'Aperçu',
+      'footer.styles':            'Styles',
+      'footer.download':          'Téléchargement',
+      'footer.copy':              '© 2026 Ardoise. Tous droits réservés. Logiciel propriétaire.',
+      'footer.terms':             "Conditions d'utilisation",
+      'footer.privacy':           'Politique de confidentialité',
+    },
+    en: {
+      'meta.title':               'Ardoise — Professional Quotes & Invoicing',
+      'meta.desc':                'Ardoise is a quote and invoice generation software with client management, available on Windows 10/11 and Linux.',
+      'nav.features':             'Features',
+      'nav.preview':              'Preview',
+      'nav.designs':              'Designs',
+      'nav.download':             'Download',
+      'nav.download_btn':         'Download',
+      'nav.contact':             'Contact',
+      'hero.badge':               'User Beta Version',
+      'hero.h1':                  'Quotes & Invoices',
+      'hero.h1_grad':             'without friction.',
+      'hero.desc':                'Create, customize and export professional quotes and invoices in just a few clicks. Manage your clients, track your pipeline and stay in control of your business.',
+      'hero.btn_dl':              'Download for free',
+      'hero.btn_preview':         'See preview',
+      'hero.pill_proprietary':    'Proprietary software',
+      'features.label':           'Features',
+      'features.title':           'Everything you need',
+      'features.sub':             'A complete tool built for freelancers and small businesses who want to move fast and stay organized.',
+      'features.app.title':       'Quotes & Invoices',
+      'features.app.desc':        'Create professional documents in seconds. Automatic numbering, status tracking: draft, sent, accepted, declined, expired.',
+      'features.clients.title':   'Client Management',
+      'features.clients.html':    'Centralize all your client information. Access the full quote history and export your entire client database as <strong style="color:var(--text);font-weight:600;">.xlsx</strong> in one click.',
+      'features.design.title':    'Fully Custom Design',
+      'features.design.desc':     'Customize everything: colors, typography, logo, spacing and layout. Example styles are just a starting point — the final result is yours.',
+      'features.pdf.title':       'PDF Export',
+      'features.pdf.desc':        'Export your documents as high-quality PDFs ready to send to your clients. Direct printing from the application included.',
+      'features.dashboard.title': 'Dashboard',
+      'features.dashboard.desc':  'Visualize your pipeline, acceptance rate, pending and accepted amounts. Your entire activity at a glance.',
+      'features.rates.title':     'Exchange Rates',
+      'features.rates.desc':      'Check live USD, CAD, EUR exchange rates directly from your dashboard, without leaving the application.',
+      'features.bilingual.title': 'Bilingual FR / EN',
+      'features.bilingual.desc':  'The application is fully available in French and English. Switch languages at any time from the settings.',
+      'preview.label':            'Preview',
+      'preview.title':            'Designed for productivity',
+      'preview.sub':              'A dark, intuitive interface built for speed. No clutter — just what matters.',
+      'preview.tab_dashboard':    'Dashboard',
+      'preview.tab_design':       'Design Editor',
+      'preview.pb1.title':        'Real-time pipeline',
+      'preview.pb1.desc':         'Track the progress of your quotes from drafting to acceptance.',
+      'preview.pb2.title':        'Visual breakdown',
+      'preview.pb2.desc':         'Donut chart by status: draft, sent, accepted, declined, expired.',
+      'preview.pb3.title':        'Live exchange rates',
+      'preview.pb3.desc':         'USD, CAD, EUR pairs updated automatically from your desktop.',
+      'preview.pb4.title':        'Custom colors',
+      'preview.pb4.desc':         'Primary, secondary, text, accent, row background — all configurable.',
+      'preview.pb5.title':        'Typography & Logo',
+      'preview.pb5.desc':         'Choose your font, adjust the size and add your business logo.',
+      'preview.pb6.title':        'Import / Export JSON',
+      'preview.pb6.desc':         'Save and share your design configurations across different installations.',
+      'themes.label':             'Document styles',
+      'themes.title':             'Examples among endless possibilities',
+      'themes.sub':               'These previews show what you can create with Ardoise. Logo, colors, spacing, typography — every element is customizable. The final result perfectly reflects your brand identity.',
+      'themes.t1.name':           'Minimalist',
+      'themes.t1.desc':           'Clean example: dark background, tight typography, minimal layout. Fully customizable.',
+      'themes.t2.name':           'Corporate',
+      'themes.t2.desc':           'Structured example: navy blue, strong headers, detailed columns. Adapt every color to your brand.',
+      'themes.t3.name':           'Modern',
+      'themes.t3.desc':           'Dynamic example: bright purple, bold layout. Replace the hue with any color from your brand.',
+      'download.label':           'Download',
+      'download.title':           'Available on your platforms',
+      'download.sub':             'Ardoise runs natively on Windows and Linux. Choose the format that fits your environment.',
+      'download.notice':          'User test version — Your feedback is welcome',
+      'download.linux.sub':       'Debian · Fedora · Universal',
+      'download.tag.universal':   'Universal',
+      'sha.title':                'SHA-256 Checksums',
+      'sha.sub':                  'Click the hash to select it — Copy to verify',
+      'sha.copy':                 'Copy',
+      'sha.copied':               'Copied!',
+      'contact.label':            'Contact',
+      'contact.title':            'Tell us what you think',
+      'contact.sub':              'A bug, an idea, a question? We read everything and we respond.',
+      'contact.perk1.title':      'User feedback',
+      'contact.perk1.desc':       'You are in beta — your feedback directly shapes development.',
+      'contact.perk2.title':      'Bug reports',
+      'contact.perk2.desc':       'Encountered an issue? Describe it and we will take care of it quickly.',
+      'contact.perk3.title':      'Suggestions',
+      'contact.perk3.desc':       'A missing feature? Suggest it — we evaluate every idea.',
+      'contact.field.name':       'Name',
+      'contact.field.email':      'E-mail',
+      'contact.field.type':       'Type',
+      'contact.field.os':         'Platform',
+      'contact.field.message':    'Message',
+      'contact.ph.name':          'Jane Doe',
+      'contact.ph.email':         'jane@example.com',
+      'contact.ph.message':       'Describe your feedback…',
+      'contact.type.feedback':    'User feedback',
+      'contact.type.bug':         'Bug report',
+      'contact.type.feature':     'Suggestion',
+      'contact.type.other':       'Other',
+      'contact.btn':              'Send',
+      'contact.success':          'Message sent! Thank you for your feedback.',
+      'contact.error':            'An error occurred. Please try again.',
+      'footer.desc':              'Quote & invoice generator and client management for freelancers and small businesses.',
+      'footer.nav_title':         'Navigation',
+      'footer.res_title':         'Resources',
+      'footer.features':          'Features',
+      'footer.preview':           'Preview',
+      'footer.styles':            'Styles',
+      'footer.download':          'Download',
+      'footer.copy':              '© 2026 Ardoise. All rights reserved. Proprietary software.',
+      'footer.terms':             'Terms of Use',
+      'footer.privacy':           'Privacy Policy',
+    }
+  };
+
+  function applyLang(lang) {
+    const t = LANGS[lang];
+    if (!t) return;
+    window._lang = lang;
+    document.documentElement.lang = lang;
+    document.title = t['meta.title'];
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.content = t['meta.desc'];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const v = t[el.dataset.i18n];
+      if (v !== undefined) el.textContent = v;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const v = t[el.dataset.i18nHtml];
+      if (v !== undefined) el.innerHTML = v;
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const v = t[el.dataset.i18nPh];
+      if (v !== undefined) el.placeholder = v;
+    });
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = lang === 'fr' ? 'EN' : 'FR';
+    try { localStorage.setItem('ardoise-lang', lang); } catch(e) {}
+  }
+
+  function toggleLang() {
+    applyLang((window._lang || 'fr') === 'fr' ? 'en' : 'fr');
+  }
+
+  function copyHash(btn, hash) {
+    navigator.clipboard.writeText(hash).then(() => {
+      const copied = (LANGS[window._lang || 'fr'] || LANGS.fr)['sha.copied'] || 'Copied!';
+      btn.textContent = copied;
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = (LANGS[window._lang || 'fr'] || LANGS.fr)['sha.copy'] || 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  /* ─── DETECT LANGUAGE ──────────────────────────────── */
+  (function () {
+    let lang = 'fr';
+    try {
+      const saved = localStorage.getItem('ardoise-lang');
+      if (saved) { lang = saved; }
+      else {
+        const bl = (navigator.language || navigator.userLanguage || 'fr').toLowerCase();
+        lang = bl.startsWith('fr') ? 'fr' : 'en';
+      }
+    } catch(e) {}
+    applyLang(lang);
+  })();
+
+  /* ─── NAV ──────────────────────────────────────────── */
+  function toggleNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+  function closeNav() {
+    document.getElementById('mobileNav').classList.remove('open');
+  }
+
+  /* ─── TABS ─────────────────────────────────────────── */
+  function switchTab(btn, panelId) {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+  }
+
+  /* ─── SCROLL FADE-IN ────────────────────────────────── */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+</script>
+
+<!--
+  ─── CONTACT FORM ────────────────────────────────────────────────────────────
+  Les données du formulaire sont envoyées à une fonction serverless Netlify
+  (netlify/functions/contact.js) qui détient les clés Supabase côté serveur.
+  Aucune clé n'est exposée dans ce fichier HTML.
+
+  Pour déployer :
+    1. Pushez ce dossier sur GitHub
+    2. Connectez le dépôt sur netlify.com (New site from Git)
+    3. Dans Netlify → Site configuration → Environment variables, ajoutez :
+         SUPABASE_URL       https://vyspkvahazhlkiejfwok.supabase.co
+         SUPABASE_ANON_KEY  votre-clé-anon
+  ─────────────────────────────────────────────────────────────────────────── -->
+<script type="module">
+  const form   = document.getElementById('contactForm');
+  const submit = document.getElementById('cfSubmit');
+  const msgOk  = document.getElementById('cfSuccess');
+  const msgErr = document.getElementById('cfError');
+
+  const COOLDOWN_MS = 5 * 60 * 1000;
+  const EMAIL_RE    = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
+
+  function setLoading(on) {
+    submit.disabled = on;
+    if (on) {
+      const s = document.createElement('span');
+      s.className = 'spinner'; s.id = 'cfSpinner';
+      submit.prepend(s);
+    } else {
+      document.getElementById('cfSpinner')?.remove();
+    }
+  }
+
+  function showError(text) {
+    msgErr.style.display = 'flex';
+    const span = msgErr.querySelector('[data-i18n="contact.error"]');
+    if (text && span) span.textContent = text;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msgOk.style.display = 'none';
+    msgErr.style.display = 'none';
+
+    // Honeypot
+    if (document.getElementById('cf-website').value) return;
+
+    // Cooldown côté client
+    try {
+      const last = parseInt(localStorage.getItem('cf_last_send') || '0', 10);
+      if (Date.now() - last < COOLDOWN_MS) {
+        const wait = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 60000);
+        const lang = window._lang || 'fr';
+        showError(lang === 'fr'
+          ? `Veuillez attendre ${wait} minute(s) avant de renvoyer un message.`
+          : `Please wait ${wait} more minute(s) before sending again.`);
+        return;
+      }
+    } catch(e) {}
+
+    // Validation côté client (doublée côté serveur)
+    const email   = document.getElementById('cf-email').value.trim();
+    const message = document.getElementById('cf-msg').value.trim();
+    const lang    = window._lang || 'fr';
+
+    if (!EMAIL_RE.test(email)) {
+      showError(lang === 'fr' ? 'Adresse e-mail invalide.' : 'Invalid email address.');
+      return;
+    }
+    if (message.length < 5) {
+      showError(lang === 'fr' ? 'Message trop court.' : 'Message too short.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/.netlify/functions/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:    document.getElementById('cf-name').value.trim().slice(0, 100),
+          email:   email.slice(0, 254),
+          type:    document.getElementById('cf-type').value,
+          os:      document.getElementById('cf-os').value,
+          message: message.slice(0, 2000),
+          website: document.getElementById('cf-website').value,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || 'unknown');
+
+      try { localStorage.setItem('cf_last_send', Date.now().toString()); } catch(e) {}
+      msgOk.style.display = 'flex';
+      form.reset();
+      submit.disabled = true;
+      submit.style.opacity = '0.45';
+    } catch (err) {
+      console.error('Contact error:', err.message);
+      showError(null);
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+</body>
+</html>
