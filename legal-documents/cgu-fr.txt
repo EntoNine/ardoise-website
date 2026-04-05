@@ -1,0 +1,497 @@
+ARDOISE — CONDITIONS GÉNÉRALES D'UTILISATION
+Version 1.4 — Avril 2026
+================================================================================
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     EN BREF — L'ESSENTIEL EN LANGAGE CLAIR                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  • Vos données restent chez vous. Aucune information ne quitte votre        │
+│    appareil vers nos serveurs. Vous en avez le plein contrôle.              │
+│                                                                             │
+│  • Ardoise est un outil de mise en forme. Sa fonction principale est la     │
+│    génération de documents PDF. Il n'est pas un conseiller fiscal.          │
+│                                                                             │
+│  • Le logiciel est gratuit pendant la période d'essai, puis payant.         │
+│    Même après expiration, vos fichiers restent accessibles.                 │
+│                                                                             │
+│  • Vérification obligatoire. Ne vous fiez pas uniquement aux calculs de     │
+│    l'app. Validez toujours vos taxes avec un professionnel ou auprès de     │
+│    Revenu Québec / l'ARC avant d'envoyer vos documents.                     │
+│                                                                             │
+│  • Faites des sauvegardes. Ardoise vous permet de configurer un dossier     │
+│    de sauvegarde automatique (Dropbox, disque externe, etc.). En cas        │
+│    de bris de votre appareil, nous ne pouvons pas récupérer vos données.    │
+│                                                                             │
+│  • Si nous modifions ces conditions de façon importante, vous aurez         │
+│    30 jours pour les refuser et résilier sans frais.                        │
+│                                                                             │
+│  Ce résumé n'a pas de valeur contractuelle. Seul le texte complet           │
+│  ci-dessous fait foi en cas de litige.                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+JOURNAL DES MODIFICATIONS (CHANGELOG)
+================================================================================
+
+  Version 1.4 — Avril 2026
+    - Article 2 : Redéfinition de l'objet du logiciel comme outil de traitement
+      technique et de génération de documents PDF.
+    - Article 7.1 : Précision sur l'aptitude à l'usage limitée à la fonction 
+      technique de mise en forme et d'exportation de documents.
+    - Article 7.3 : Renforcement de la clause de non-responsabilité sur les 
+      calculs ; obligation de vérification externe systématique avant toute 
+      émission de document.
+    - Encadré "En bref" : Mise à jour pour refléter la nature de générateur PDF.
+
+  Version 1.3 — Avril 2026
+    - Article 6 : ajout d'une déclaration de conformité aux licences des
+      composants open source utilisés dans le Logiciel.
+    - Article 7.1 : reconnaissance explicite de la garantie de qualité prévue
+      par le Code civil du Québec ; précision que la clause "en l'état" ne
+      saurait priver l'Utilisateur de ses droits légaux impératifs.
+    - Article 7.3 : renforcement de l'avertissement fiscal ; ajout d'une
+      clause de non-conseil professionnel (le Logiciel n'est pas un conseiller
+      fiscal ou juridique).
+    - Article 7.4 (nouveau) : clause cybersécurité et composants tiers ;
+      engagement de l'éditeur sur la maintenance des dépendances.
+    - Article 7.5 (nouveau) : reconnaissance explicite de la Loi sur la
+      protection du consommateur (LPC) comme loi d'ordre public au Québec,
+      et de sa primauté sur les clauses du présent contrat.
+    - Encadré "En bref" : ajout d'un avertissement fiscal explicite.
+
+  Version 1.2 — Avril 2026
+    - Ajout d'un résumé en langage clair (encadré "En bref") en tête de
+      document.
+    - Article 5.3 renforcé : mention de la fonctionnalité de configuration
+      d'un dossier de sauvegarde externe.
+    - Ajout du journal des modifications (Changelog).
+
+  Version 1.1 — Avril 2026
+    - Article 7.2 : ajout d'exceptions à la limitation de responsabilité
+      (faute lourde, faute intentionnelle, préjudice corporel).
+    - Article 7.3 : engagement sur l'exactitude des taux par défaut et
+      référence à la garantie d'usage (LPC).
+    - Article 5.4 (nouveau) : portabilité des données, format SQLite ouvert,
+      reconnaissance de l'obligation de conservation de 6 ans.
+    - Article 9.3 : confirmation de l'accès aux données après résiliation.
+    - Article 10 : préavis de 30 jours pour toute modification substantielle.
+
+  Version 1.0 — Avril 2026
+    - Publication initiale des Conditions Générales d'Utilisation.
+
+Note : En cas de litige, la version des CGU en vigueur à la date de la
+transaction ou de l'action concernée est celle qui s'applique. Les versions
+archivées sont disponibles sur demande auprès de l'éditeur.
+
+================================================================================
+
+
+Bienvenue dans Ardoise, un logiciel de bureau destiné à la gestion de devis et
+de factures pour les travailleurs autonomes et les petites entreprises. Avant
+d'utiliser ce logiciel, veuillez lire attentivement les présentes Conditions
+Générales d'Utilisation (ci-après « CGU »). En installant, activant ou utilisant
+Ardoise, vous reconnaissez avoir pris connaissance des présentes CGU et vous
+engagez à les respecter.
+
+
+ARTICLE 1 — DÉFINITIONS
+────────────────────────────────────────────────────────────────────────────────
+
+« Logiciel » désigne l'application de bureau Ardoise, incluant toutes ses
+fonctionnalités, mises à jour et composants associés.
+
+« Utilisateur » désigne toute personne physique ou morale qui installe ou utilise
+le Logiciel.
+
+« Licence » désigne le droit d'utilisation du Logiciel octroyé à l'Utilisateur
+dans les conditions définies aux présentes.
+
+« Clé d'activation » désigne le fichier ou le code permettant d'activer une
+Licence commerciale du Logiciel.
+
+« Données » désigne toutes les informations saisies par l'Utilisateur dans le
+Logiciel (clients, devis, factures, paramètres d'entreprise, etc.).
+
+« Période d'essai » désigne la durée limitée pendant laquelle le Logiciel peut
+être utilisé sans Clé d'activation.
+
+« Composants tiers » désigne les bibliothèques logicielles, paquets ou modules
+développés par des tiers et intégrés au Logiciel.
+
+
+ARTICLE 2 — OBJET
+────────────────────────────────────────────────────────────────────────────────
+
+Les présentes CGU ont pour objet de définir les conditions dans lesquelles
+l'Utilisateur est autorisé à utiliser le Logiciel Ardoise, un outil de bureau
+fonctionnant en mode hors ligne (offline-first). Le Logiciel est principalement 
+destiné à la génération, à la mise en forme et à l'exportation de documents PDF 
+(devis et factures) à partir des données saisies par l'Utilisateur.
+
+Le Logiciel permet notamment :
+  - La gestion et le suivi de devis et de factures ;
+  - La gestion d'un répertoire de clients ;
+  - La génération et l'export de documents PDF ;
+  - La personnalisation des modèles de documents ;
+  - La consultation de taux de change en temps réel (fonctionnalité optionnelle
+    requérant une connexion Internet).
+
+Le Logiciel est un outil de productivité technique. Il ne constitue en aucun cas un
+système de gestion comptable certifié, ni un service de conseil fiscal, comptable ou juridique.
+
+
+ARTICLE 3 — LICENCE D'UTILISATION
+────────────────────────────────────────────────────────────────────────────────
+
+3.1 Octroi de la Licence
+
+Sous réserve du respect des présentes CGU et de l'activation du Logiciel
+conformément à l'Article 4, l'éditeur accorde à l'Utilisateur une Licence
+personnelle, non exclusive, non transférable et non sous-licenciable pour
+installer et utiliser le Logiciel sur les appareils lui appartenant ou placés
+sous son contrôle.
+
+3.2 Restrictions
+
+L'Utilisateur s'interdit expressément de :
+  - Copier, reproduire ou dupliquer le Logiciel en dehors des sauvegardes
+    légitimes autorisées par la loi ;
+  - Modifier, adapter, traduire, décompiler, désassembler ou procéder à toute
+    forme d'ingénierie inverse du Logiciel, sauf dans les cas expressément
+    autorisés par la loi applicable ;
+  - Louer, prêter, céder, sous-licencier ou transférer le Logiciel ou tout droit
+    afférent à des tiers ;
+  - Partager, distribuer ou revendre des Clés d'activation à des tiers ;
+  - Supprimer ou altérer toute mention de droits de propriété intellectuelle
+    figurant dans le Logiciel ;
+  - Utiliser le Logiciel à des fins illicites ou en violation des lois et
+    réglementations applicables.
+
+3.3 Période d'essai
+
+Le Logiciel peut être utilisé sans Clé d'activation pendant une Période d'essai
+limitée. À l'expiration de cette période, l'accès aux fonctionnalités complètes
+du Logiciel sera restreint jusqu'à l'activation d'une Licence valide. La durée
+exacte de la Période d'essai est indiquée dans l'interface du Logiciel.
+
+
+ARTICLE 4 — ACTIVATION ET SYSTÈME DE LICENCE
+────────────────────────────────────────────────────────────────────────────────
+
+4.1 Mécanisme d'activation
+
+L'activation du Logiciel s'effectue au moyen d'un fichier de licence fourni par
+l'éditeur. Ce fichier est sécurisé par des mécanismes de protection cryptographique
+garantissant son authenticité et son intégrité. Toute attempt de falsification,
+de duplication ou de contournement de ce mécanisme constitue une violation des
+présentes CGU.
+
+4.2 Validité de la Licence
+
+Une Licence est délivrée pour un usage personnel ou professionnel défini lors de
+l'achat. Elle est valide pour la durée et le nombre d'installations stipulés dans
+le fichier de licence. L'Utilisateur s'engage à ne pas tenter de contourner les
+mécanismes de vérification de la Licence.
+
+4.3 Révocation
+
+L'éditeur se réserve le droit de révoquer une Licence en cas de violation des
+présentes CGU, notamment en cas de partage non autorisé de la Clé d'activation
+ou de tentative de contournement des protections du Logiciel.
+
+
+ARTICLE 5 — DONNÉES PERSONNELLES ET CONFIDENTIALITÉ
+────────────────────────────────────────────────────────────────────────────────
+
+5.1 Stockage local
+
+Ardoise est conçu dans une approche hors ligne. Toutes les Données saisies par
+l'Utilisateur (informations clients, devis, factures, paramètres d'entreprise,
+logo) sont stockées exclusivement en local sur l'appareil de l'Utilisateur, dans
+une base de données au format standard SQLite. Aucune Donnée personnelle ou
+commerciale n'est transmise à des serveurs distants appartenant à l'éditeur.
+
+5.2 Taux de change
+
+La fonctionnalité de consultation des taux de change fait appel à un service
+externe en lecture seule. Cette requête ne transmet aucune Donnée personnelle ou
+commerciale de l'Utilisateur. Elle est uniquement déclenchée lorsque l'Utilisateur
+accède au tableau de bord et nécessite une connexion Internet active.
+
+5.3 Responsabilité de l'Utilisateur et sauvegardes
+
+L'Utilisateur est seul responsable de la sauvegarde et de la sécurité de ses
+Données. Ardoise offre la possibilité de configurer un dossier de sauvegarde
+externe dans les paramètres de l'application, permettant de rediriger ou de
+copier automatiquement le fichier de base de données vers un emplacement au choix
+de l'Utilisateur (ex. : dossier synchronisé avec Dropbox, Google Drive, un disque
+externe ou tout autre support). L'éditeur recommande vivement à l'Utilisateur
+d'activer et de tester régulièrement cette fonctionnalité.
+
+En l'absence de sauvegarde externe configurée et active, l'éditeur ne pourra être
+tenu responsable de la perte, de la corruption ou de l'accès non autorisé aux
+Données résultant d'une défaillance matérielle, d'un vol ou d'une négligence de
+l'Utilisateur, sous réserve des dispositions de l'Article 7.2.
+
+5.4 Portabilité et conservation des données
+
+Les Données de l'Utilisateur sont stockées dans un fichier au format ouvert et
+standard (SQLite). Indépendamment du statut de la Licence, l'Utilisateur conserve
+à tout moment la capacité technique d'accéder directement à ce fichier et d'en
+extraire ses données à l'aide d'outils tiers gratuits et largement disponibles.
+Cette disposition vise notamment à permettre à l'Utilisateur de satisfaire à ses
+obligations légales de conservation des documents comptables, fixées à six (6)
+ans par la législation fiscale fédérale canadienne et provinciale.
+
+5.5 Conformité réglementaire
+
+Dans la mesure où l'Utilisateur traite des données personnelles de tiers via le
+Logiciel, il est responsable du respect des lois applicables en matière de
+protection des données personnelles, notamment la Loi 25 au Québec, le RGPD en
+Union européenne, et toute autre réglementation locale pertinente. L'éditeur
+n'étant pas destinataire de ces données, il n'agit pas en qualité de responsable
+du traitement ou de sous-traitant au sens de ces réglementations.
+
+
+ARTICLE 6 — PROPRIÉTÉ INTELLECTUELLE ET COMPOSANTS OPEN SOURCE
+────────────────────────────────────────────────────────────────────────────────
+
+6.1 Droits de l'éditeur
+
+Le Logiciel Ardoise, son code source propriétaire, son interface graphique, sa
+documentation, ses éléments graphiques, ses algorithmes et l'ensemble de ses
+composants originaux constituent des œuvres de l'esprit protégées par les lois
+sur le droit d'auteur et la propriété intellectuelle applicables. L'éditeur
+détient l'ensemble des droits de propriété intellectuelle afférents aux éléments
+originaux du Logiciel.
+
+Les présentes CGU ne confèrent à l'Utilisateur aucun droit de propriété sur le
+Logiciel. Seul un droit d'utilisation limité est accordé, dans les conditions
+strictement définies à l'Article 3.
+
+6.2 Composants open source
+
+Le Logiciel intègre des Composants tiers distribués sous licences libres ou open
+source (notamment des bibliothèques Rust publiées via crates.io, et des modules
+JavaScript publiés via npm). L'éditeur déclare s'efforcer de respecter
+scrupuleusement les conditions de chacune de ces licences, notamment en ce qui
+concerne les obligations de mention d'attribution et de compatibilité de licence.
+
+La liste des Composants tiers utilisés et de leurs licences respectives est
+disponible dans la documentation accompagnant le Logiciel ou sur demande auprès
+de l'éditeur. L'utilisation de ces Composants tiers par l'Utilisateur dans le
+cadre normal du Logiciel est couverte par les termes de leurs licences
+respectives ; ces licences tierces ne sont pas modifiées par les présentes CGU.
+
+
+ARTICLE 7 — GARANTIES ET LIMITATIONS DE RESPONSABILITÉ
+────────────────────────────────────────────────────────────────────────────────
+
+7.1 Garantie de qualité et aptitude à l'usage
+
+Conformément aux dispositions impératives du Code civil du Québec, l'éditeur
+garantit que le Logiciel est apte à sa fonction technique principale : la création 
+et l'exportation de documents PDF fonctionnels. Cette garantie ne s'étend pas à 
+l'exactitude comptable ou fiscale des données saisies ou calculées, qui relèvent 
+de la responsabilité de l'Utilisateur.
+
+La mention « en l'état » (as is) contenue dans les présentes CGU s'applique aux
+aspects du Logiciel non couverts par cette garantie légale, notamment l'adéquation
+parfaite à tous les besoins spécifiques de l'Utilisateur, l'absence totale
+d'erreurs mineures, ou la compatibilité avec tout environnement matériel ou
+logiciel particulier. Elle ne saurait en aucun cas priver l'Utilisateur de ses
+droits légaux impératifs tels que prévus par le Code civil du Québec ou la Loi
+sur la protection du consommateur.
+
+En cas de défaillance majeure rendant le Logiciel inutilisable pour sa fonction
+principale, l'Utilisateur pourra solliciter auprès de l'éditeur, selon les 
+circonstances, une correction, un remplacement ou un remboursement partiel ou total 
+de la Licence.
+
+7.2 Limitation de responsabilité
+
+Dans toute la mesure permise par la loi applicable, la responsabilité de l'éditeur
+envers l'Utilisateur est limitée au montant effectivement payé par l'Utilisateur
+pour l'acquisition de la Licence au cours des douze (12) mois précédant le fait
+générateur de responsabilité. En aucun cas l'éditeur ne saurait être tenu
+responsable de dommages indirects, accessoires, spéciaux ou consécutifs, incluant
+notamment la perte de profits, la perte de données ou l'interruption d'activité.
+
+Cette limitation ne s'applique pas dans les cas suivants, conformément au Code
+civil du Québec et aux lois applicables :
+  - En cas de faute lourde ou de faute intentionnelle (dol) de la part de
+    l'éditeur ;
+  - En cas de préjudice corporel causé à l'Utilisateur ;
+  - Dans toute autre situation où la loi impérative interdit de limiter ou
+    d'exclure la responsabilité.
+
+7.3 Fonctionnalités de calcul et taxation — Vérification externe obligatoire
+
+Le Logiciel intègre des fonctions de calcul automatique des taxes (TPS, TVQ, TVA, Sales
+Tax, etc.) s'appuyant sur des taux prédéfinis ou configurés par l'Utilisateur.
+Ces fonctions sont fournies exclusivement à titre de commodité de calcul arithmétique.
+
+AVERTISSEMENT IMPORTANT : Ardoise n'est pas un service de conseil fiscal. La fonctionnalité 
+de taxation ne doit en aucun cas être utilisée comme source de vérité fiscale. 
+L'Utilisateur reconnaît expressément que :
+1. Toute donnée numérique générée par le logiciel doit faire l'objet d'une vérification 
+   externe rigoureuse auprès d'un professionnel agréé ou des autorités fiscales 
+   (Revenu Québec / ARC) avant toute émission de document officiel.
+2. L'exactitude des totaux générés dépend entièrement de la validité des taux saisis 
+   ou sélectionnés par l'Utilisateur.
+3. L'éditeur ne garantit pas la conformité des documents générés avec les exigences 
+   spécifiques de l'administration fiscale de l'Utilisateur.
+4. L'éditeur décline toute responsabilité pour les pénalités, intérêts ou redressements 
+   résultant d'une confiance aveugle dans les calculs automatiques du logiciel, d'erreurs 
+   de saisie ou d'une configuration inadaptée.
+
+En cas de divergence entre les calculs du Logiciel et les obligations réelles de 
+l'Utilisateur, ces dernières prévalent en tout temps.
+
+7.4 Cybersécurité et composants tiers
+
+Bien qu'Ardoise fonctionne principalement hors ligne, réduisant ainsi
+significativement la surface d'exposition aux risques de cybersécurité, le
+Logiciel intègre des Composants tiers susceptibles de contenir des vulnérabilités.
+L'éditeur s'engage à maintenir ses dépendances logicielles à jour et à effectuer
+des audits de sécurité réguliers sur ses Composants tiers, notamment par
+l'utilisation d'outils d'analyse de vulnérabilités appropriés.
+
+Toutefois, l'éditeur ne peut garantir l'absence totale de vulnérabilité dans les
+Composants tiers et ne saurait être tenu responsable des dommages résultant de
+failles de sécurité dans ces composants, à moins qu'il ne soit établi que l'éditeur
+avait connaissance de la vulnérabilité et a délibérément omis d'y remédier dans
+un délai raisonnable, ce qui pourrait constituer une faute lourde au sens de
+l'Article 7.2.
+
+La nature offline-first du Logiciel constitue la principale protection des Données
+de l'Utilisateur. La sécurité physique de l'appareil sur lequel le Logiciel est
+installé relève de la responsabilité exclusive de l'Utilisateur.
+
+7.5 Primauté de la Loi sur la protection du consommateur
+
+Lorsque l'Utilisateur est un « consommateur » au sens de la Loi sur la protection
+du consommateur du Québec (L.R.Q., c. P-40.1), les dispositions de cette loi,
+étant d'ordre public, s'appliquent et prévalent sur toute clause des présentes CGU
+qui y serait contraire ou qui limiterait les droits conférés à l'Utilisateur en
+vertu de cette loi. Aucune disposition des présentes CGU ne doit être interprétée
+comme une renonciation de l'Utilisateur-consommateur à ses droits légaux
+impératifs. En particulier, toute clause qui serait jugée abusive au sens de la
+LPC pourrait être déclarée nulle par un tribunal sans affecter la validité du
+reste du contrat.
+
+
+ARTICLE 8 — MISES À JOUR ET ÉVOLUTIONS
+────────────────────────────────────────────────────────────────────────────────
+
+L'éditeur se réserve le droit de publier des mises à jour du Logiciel (corrections
+de bogues, améliorations de fonctionnalités, nouvelles versions). Ces mises à
+jour peuvent modifier les fonctionnalités existantes ou en introduire de nouvelles.
+Certaines mises à jour majeures peuvent nécessiter l'acquisition d'une nouvelle
+Licence. L'éditeur ne s'engage pas à maintenir indéfiniment le support du Logiciel
+ni à publier des mises à jour correctives pour toutes les versions antérieures.
+
+
+ARTICLE 9 — RÉSILIATION
+────────────────────────────────────────────────────────────────────────────────
+
+9.1 Résiliation par l'Utilisateur
+
+L'Utilisateur peut mettre fin à sa Licence à tout moment en désinstallant le
+Logiciel de l'ensemble de ses appareils et en détruisant tous les exemplaires
+qu'il détient. Aucun remboursement ne sera effectué pour la portion de Licence
+non utilisée, sauf disposition contraire expressément stipulée lors de l'achat,
+ou sauf exercice d'un droit prévu par la Loi sur la protection du consommateur.
+
+9.2 Résiliation par l'éditeur
+
+L'éditeur se réserve le droit de résilier la Licence de l'Utilisateur avec effet
+immédiat en cas de violation des présentes CGU, notamment en cas d'utilisation
+frauduleuse, de contournement des protections du Logiciel, ou de partage non
+autorisé de la Clé d'activation.
+
+9.3 Effets de la résiliation — Accès aux données
+
+À la résiliation, pour quelque cause que ce soit, les droits d'utilisation du
+Logiciel accordés à l'Utilisateur prennent fin immédiatement. Toutefois, les
+Données de l'Utilisateur demeurent intégralement stockées sur son appareil dans
+un fichier au format standard (SQLite), accessible et lisible à l'aide d'outils
+tiers, indépendamment de tout statut de Licence.
+
+L'éditeur reconnaît que l'Utilisateur doit pouvoir accéder à ses données comptables
+en tout temps pour satisfaire à ses obligations légales de conservation des
+documents, notamment les six (6) années requises par les autorités fiscales
+canadiennes (ARC / Revenu Québec). La résiliation d'une Licence ne prive en
+aucun cas l'Utilisateur de ce droit d'accès à ses propres données.
+
+
+ARTICLE 10 — MODIFICATIONS DES CGU
+────────────────────────────────────────────────────────────────────────────────
+
+L'éditeur se réserve le droit de modifier les présentes CGU à tout moment.
+
+En cas de modification substantielle affectant les droits ou les obligations de
+l'Utilisateur, un préavis écrit d'au moins trente (30) jours sera communiqué à
+l'Utilisateur avant l'entrée en vigueur des nouvelles CGU, par notification dans
+le Logiciel lors de son démarrage ou par tout autre moyen approprié.
+
+Durant ce délai de préavis, l'Utilisateur qui refuse les nouvelles CGU peut
+résilier sa Licence sans frais ni pénalité, en désinstallant le Logiciel et en
+notifiant l'éditeur de son refus. Passé ce délai sans résiliation, la poursuite
+de l'utilisation du Logiciel vaut acceptation des nouvelles CGU.
+
+Pour les modifications mineures (corrections de formulation, mises à jour de
+références légales, clarifications sans incidence sur les droits des parties),
+l'éditeur peut procéder sans préavis, tout en informant l'Utilisateur de la nature
+mineure de la modification.
+
+Toutes les versions antérieures des CGU sont archivées et disponibles sur demande
+auprès de l'éditeur. La version applicable à toute transaction ou action est celle
+en vigueur à la date de ladite transaction ou action.
+
+
+ARTICLE 11 — DROIT APPLICABLE ET JURIDICTION COMPÉTENTE
+────────────────────────────────────────────────────────────────────────────────
+
+Les présentes CGU sont régies et interprétées conformément aux lois de la province
+de Québec et aux lois fédérales du Canada applicables, y compris le Code civil du
+Québec et la Loi sur la protection du consommateur, dans la mesure où ces textes
+s'appliquent à la situation de l'Utilisateur.
+
+Tout litige qui ne pourrait être résolu à l'amiable sera soumis à la compétence
+exclusive des tribunaux de la province de Québec.
+
+Si certaines dispositions des présentes CGU sont déclarées nulles ou non opposables
+par une décision de justice, les autres dispositions demeurent pleinement en
+vigueur.
+
+
+ARTICLE 12 — DISPOSITIONS DIVERSES
+────────────────────────────────────────────────────────────────────────────────
+
+12.1 Intégralité de l'accord
+
+Les présentes CGU constituent l'intégralité de l'accord entre l'éditeur et
+l'Utilisateur concernant l'utilisation du Logiciel et remplacent tous les accords
+antérieurs relatifs à ce sujet, sous réserve des droits légaux impératifs de
+l'Utilisateur.
+
+12.2 Absence de renonciation
+
+Le fait pour l'éditeur de ne pas exercer un droit prévu aux présentes CGU ne
+constitue pas une renonciation à ce droit.
+
+12.3 Contact
+
+Pour toute question relative aux présentes CGU, à votre Licence, pour signaler
+un bogue ou une vulnérabilité de sécurité, vous pouvez contacter l'éditeur via
+les coordonnées indiquées dans le Logiciel ou sur le site officiel d'Ardoise.
+
+
+================================================================================
+Ces Conditions Générales d'Utilisation (version 1.4) sont entrées en vigueur
+en avril 2026. Ardoise — Tous droits réservés.
+================================================================================

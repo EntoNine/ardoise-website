@@ -1,0 +1,47 @@
+Here is the English version of your Privacy Policy. It is written in a professional, "Silicon Valley" style while remaining compliant with international standards (GDPR) and Quebec's Bill 25.
+Privacy Policy — Ardoise Software
+
+Last Updated: April 5, 2026
+
+At Ardoise Software, we are committed to protecting your privacy. This policy outlines how we handle your information when you use our services or communicate with us through our domain, ardoise-software.ca.
+1. Collection of Personal Information
+
+We only collect the minimum information strictly necessary to provide our services:
+
+    Email Communications: When you contact us at contact@ardoise-software.ca, we store your email address and the content of your message to respond to your inquiry.
+
+    Technical Data: If our software utilizes network functions, no personally identifiable information (PII) is collected without your explicit consent.
+
+2. Use of Data
+
+Your personal information is used exclusively to:
+
+    Provide technical support for our software.
+
+    Improve the user experience of our tools.
+
+    Communicate with you regarding important software updates.
+
+3. Third-Party Data Sharing
+
+Ardoise Software does not sell, rent, or share your data with third parties for marketing purposes. However, some data may pass through our infrastructure providers (e.g., Cloudflare for email routing, Netlify for website hosting), which maintain their own high security standards.
+4. Data Security
+
+As developers focused on cybersecurity, we use industry-standard encryption protocols (TLS/SSL) to protect data exchanges. We apply best practices to prevent unauthorized access and ensure the integrity of your information.
+5. Your Rights (Bill 25 - Quebec & GDPR)
+
+In accordance with Quebec and international legislation, you have the following rights:
+
+    The right to access your personal information.
+
+    The right to rectification if any information is inaccurate.
+
+    The right to withdraw consent or request the deletion of your data.
+
+6. Contact & Data Protection Officer
+
+For any questions regarding your data or to exercise your rights, please contact us at:
+
+Inquiry: Ardoise Software Support
+
+Email: contact@ardoise-software.ca

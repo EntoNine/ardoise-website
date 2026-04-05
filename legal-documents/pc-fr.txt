@@ -1,0 +1,46 @@
+Politique de Confidentialité — Ardoise Software
+
+Dernière mise à jour : 5 avril 2026
+
+Chez Ardoise Software, nous prenons la protection de vos données au sérieux. Cette politique explique comment nous traitons vos informations lorsque vous utilisez nos services ou communiquez avec nous via notre domaine ardoise-software.ca.
+1. Collecte des renseignements personnels
+
+Nous ne collectons que les informations strictement nécessaires à la fourniture de nos services :
+
+    Communications par courriel : Lorsque vous nous écrivez à contact@ardoise-software.ca, nous conservons votre adresse courriel et le contenu de votre message pour répondre à votre demande.
+
+    Données techniques : Si notre logiciel utilise des fonctions réseau, nous ne collectons aucune donnée nominative sans votre consentement explicite.
+
+2. Utilisation des données
+
+Vos renseignements personnels sont utilisés exclusivement pour :
+
+    Assurer le support technique de nos logiciels.
+
+    Améliorer l'expérience utilisateur de nos outils.
+
+    Communiquer avec vous concernant des mises à jour importantes.
+
+3. Partage des données à des tiers
+
+Ardoise Software ne vend, ne loue, ni ne partage vos données à des tiers à des fins marketing. Cependant, certaines données peuvent transiter par nos fournisseurs d'infrastructure (ex: Cloudflare pour le routage des courriels, Netlify pour l'hébergement du site), qui respectent leurs propres normes de sécurité élevées.
+4. Sécurité des données
+
+En tant que développeurs axés sur la cybersécurité, nous utilisons des protocoles de chiffrement (TLS/SSL) pour protéger les échanges de données. Nous appliquons les meilleures pratiques de l'industrie pour prévenir tout accès non autorisé.
+5. Vos droits (Loi 25 - Québec)
+
+Conformément à la législation québécoise, vous disposez des droits suivants :
+
+    Droit d'accès à vos renseignements personnels.
+
+    Droit de rectification si une information est inexacte.
+
+    Droit au retrait de votre consentement ou à la suppression de vos données.
+
+6. Contact et Responsable de la protection des données
+
+Pour toute question concernant vos données ou pour exercer vos droits, vous pouvez contacter le responsable à l'adresse suivante :
+
+Responsable : Support Ardoise Software
+
+Courriel : contact@ardoise-software.ca

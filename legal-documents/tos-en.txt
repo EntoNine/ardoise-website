@@ -1,0 +1,185 @@
+================================================================================
+ARDOISE — TERMS OF SERVICE
+Version 1.4 — April 2026
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            IN BRIEF — PLAIN LANGUAGE SUMMARY                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  • Your data stays with you. No information leaves your device for our      │
+│    servers. You have full control.                                          │
+│                                                                             │
+│  • Ardoise is a formatting tool. Its primary function is generating PDF     │
+│    documents. It is not a tax advisor.                                      │
+│                                                                             │
+│  • The software is free during the trial period, then paid.                 │
+│    Even after expiration, your files remain accessible.                     │
+│                                                                             │
+│  • Mandatory verification. Do not rely solely on the app's calculations.    │
+│    Always validate your taxes with a professional or with Revenu Québec /   │
+│    the CRA before sending your documents.                                   │
+│                                                                             │
+│  • Make backups. Ardoise allows you to configure an automatic backup folder │
+│    (Dropbox, external drive, etc.). In the event of device failure, we      │
+│    cannot recover your data.                                                │
+│                                                                             │
+│  • If we make significant changes to these terms, you will have 30 days     │
+│    to refuse them and terminate without penalty.                            │
+│                                                                             │
+│  This summary is not contractually binding. Only the full text below        │
+│  is legally valid in the event of a dispute.                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+CHANGELOG
+================================================================================
+
+Version 1.4 — April 2026
+  - Article 2: Redefined the software's purpose as a technical processing and 
+    PDF generation tool.
+  - Article 7.1: Clarified that fitness for use is limited to the technical 
+    function of document formatting and export.
+  - Article 7.3: Strengthened the disclaimer regarding calculations; 
+    established a systematic external verification obligation.
+  - "In Brief" Box: Updated to reflect the PDF generator nature of the tool.
+
+Version 1.3 — April 2026
+  - Article 6: Added compliance declaration for open-source components.
+  - Article 7.1: Explicitly recognized the quality guarantee (Civil Code of 
+    Quebec) and its primacy over "as is" clauses.
+  - Article 7.5 (New): Recognition of the Consumer Protection Act (CPA).
+
+Version 1.2 — April 2026
+  - Added "In Brief" summary box and Changelog.
+  - Article 5.3: Mention of the external backup folder feature.
+
+Version 1.1 — April 2026
+  - Article 7.2: Added liability exceptions (gross negligence, bodily injury).
+  - Article 5.4 (New): Data portability (SQLite) and 6-year retention.
+
+Version 1.0 — April 2026
+  - Initial publication.
+
+================================================================================
+
+Welcome to Ardoise, a desktop software for managing quotes and invoices. 
+By installing or using Ardoise, you acknowledge that you have read these 
+Terms of Service (ToS) and agree to comply with them.
+
+
+ARTICLE 1 — DEFINITIONS
+────────────────────────────────────────────────────────────────────────────────
+
+"Software" refers to the Ardoise application and its associated components.
+"User" refers to any person or entity using the Software.
+"License" refers to the right to use the Software granted herein.
+"Data" refers to information entered by the User (clients, invoices, etc.).
+"Third-Party Components" refers to libraries integrated into the Software.
+
+
+ARTICLE 2 — PURPOSE
+────────────────────────────────────────────────────────────────────────────────
+
+Ardoise is an offline-first desktop tool primarily intended for formatting and 
+exporting PDF documents (quotes and invoices). It is a technical productivity 
+tool and DOES NOT constitute an accounting system or tax advisory service.
+
+
+ARTICLE 3 — END-USER LICENSE
+────────────────────────────────────────────────────────────────────────────────
+
+3.1 Grant: The publisher grants a personal, non-exclusive, non-transferable 
+License to use the Software on the User's devices.
+3.2 Restrictions: Reverse engineering, unauthorized copying, sharing activation 
+keys, or resale is strictly prohibited.
+3.3 Trial: The Software may be used for a limited period before requiring a 
+paid License.
+
+
+ARTICLE 4 — ACTIVATION AND LICENSE SYSTEM
+────────────────────────────────────────────────────────────────────────────────
+
+Activation is performed via a secure license file. Any attempt to bypass or 
+falsify this mechanism is a violation of these ToS. The publisher reserves 
+the right to revoke licenses in case of breach.
+
+
+ARTICLE 5 — PERSONAL DATA AND PRIVACY
+────────────────────────────────────────────────────────────────────────────────
+
+5.1 Local Storage: All Data is stored exclusively on the User's device (SQLite). 
+No commercial data is transmitted to the publisher's servers.
+5.2 Exchange Rates: This feature uses a read-only external request that does 
+not transmit personal data.
+5.3 Backups: The User is solely responsible for backups. Ardoise provides 
+settings to automate backups to an external folder. The publisher is not 
+liable for data loss due to hardware failure or theft.
+5.4 Portability: Users retain access to their SQLite database file at all times, 
+ensuring compliance with the 6-year legal retention requirement (CRA/RQ).
+
+
+ARTICLE 6 — INTELLECTUAL PROPERTY AND OPEN SOURCE
+────────────────────────────────────────────────────────────────────────────────
+
+Ardoise is protected by copyright. The publisher owns all rights to original 
+components. Third-party open-source components (Rust/crates, JS/npm) are 
+used in compliance with their respective licenses.
+
+
+ARTICLE 7 — WARRANTIES AND LIMITATIONS OF LIABILITY
+────────────────────────────────────────────────────────────────────────────────
+
+7.1 Fitness: Per the Civil Code of Quebec, the publisher guarantees the 
+Software is fit for PDF generation. This does not cover accounting accuracy.
+7.2 Liability: Limited to the amount paid for the License in the last 12 months. 
+This limit does not apply to gross negligence or bodily injury.
+7.3 Taxation Warning: Calculation features are for convenience only. 
+MANDATORY: All data must be verified by a professional or tax authorities 
+before issuing official documents. The publisher is not liable for tax penalties.
+7.4 Security: While the software is offline-first, the publisher commits to 
+maintaining dependencies. Physical device security is the User's responsibility.
+7.5 CPA Primacy: For consumers, the Quebec Consumer Protection Act (CPA) 
+prevails over any conflicting clause in these ToS.
+
+
+ARTICLE 8 — UPDATES AND EVOLUTIONS
+────────────────────────────────────────────────────────────────────────────────
+
+The publisher may release updates. Major updates may require a new License. 
+Support for older versions is not guaranteed indefinitely.
+
+
+ARTICLE 9 — TERMINATION
+────────────────────────────────────────────────────────────────────────────────
+
+9.1 By User: By uninstalling the Software. No refunds except where legally required.
+9.2 By Publisher: For ToS violations.
+9.3 Data Access: Termination does not block the User’s technical access to 
+their local SQLite data file.
+
+
+ARTICLE 10 — MODIFICATIONS TO THE TOS
+────────────────────────────────────────────────────────────────────────────────
+
+Substantial changes require 30 days' notice. Users may refuse changes by 
+terminating their license within this period. Continued use constitutes acceptance.
+
+
+ARTICLE 11 — APPLICABLE LAW AND JURISDICTION
+────────────────────────────────────────────────────────────────────────────────
+
+Governed by the laws of Quebec and Canada. Disputes shall be submitted to the 
+exclusive jurisdiction of the courts of the Province of Quebec.
+
+
+ARTICLE 12 — MISCELLANEOUS
+────────────────────────────────────────────────────────────────────────────────
+
+These ToS constitute the entire agreement. Failure to enforce a right is not 
+a waiver. For support or bug reports, contact via the official Ardoise website.
+
+
+================================================================================
+Ardoise — All rights reserved. Version 1.4 (April 2026).
+================================================================================
