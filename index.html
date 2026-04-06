@@ -487,6 +487,21 @@
       margin-bottom: 2.5rem;
     }
 
+    .dl-smartscreen {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      background: rgba(251,191,36,.06);
+      border: 1px solid rgba(251,191,36,.22);
+      color: rgba(251,191,36,.9);
+      padding: .85rem 1.1rem;
+      border-radius: var(--r-xs);
+      font-size: .78rem;
+      line-height: 1.6;
+      margin-top: 1.25rem;
+    }
+    .dl-smartscreen svg { flex-shrink: 0; margin-top: .15rem; opacity: .85; }
+
     .dl-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1276,6 +1291,11 @@
         <button class="sha-copy-btn" onclick="copyHash(this,'4ae1b32409aa05045705fd93259c3f6f36090292c9451f6da2ea6541058c42d7')" data-i18n="sha.copy">Copier</button>
       </div>
     </div>
+
+    <div class="dl-smartscreen">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span data-i18n="download.smartscreen">Sur Windows, Defender SmartScreen peut afficher un avertissement lors du premier lancement du fichier .exe. C'est normal pour un logiciel indépendant peu répandu — le fichier est sûr. Cliquez sur « Informations complémentaires » puis « Exécuter quand même » pour continuer.</span>
+    </div>
   </div>
 </section>
 
@@ -1486,6 +1506,7 @@
       'download.notice':          'Version de test utilisateurs — Vos retours sont les bienvenus',
       'download.linux.sub':       'Debian · Fedora · Universel',
       'download.tag.universal':   'Universel',
+      'download.smartscreen':     "Sur Windows, Defender SmartScreen peut afficher un avertissement lors du premier lancement du fichier .exe. C'est normal pour un logiciel indépendant peu répandu — le fichier est sûr. Cliquez sur \u00ab\u00a0Informations complémentaires\u00a0\u00bb puis \u00ab\u00a0Exécuter quand même\u00a0\u00bb pour continuer.",
       'sha.title':                'Sommes de contrôle SHA-256',
       'sha.sub':                  'Cliquez sur le hash pour sélectionner — Copiez pour vérifier',
       'sha.copy':                 'Copier',
@@ -1592,6 +1613,7 @@
       'download.notice':          'User test version — Your feedback is welcome',
       'download.linux.sub':       'Debian · Fedora · Universal',
       'download.tag.universal':   'Universal',
+      'download.smartscreen':     'On Windows, Defender SmartScreen may show a warning when running the .exe installer for the first time. This is normal for independent software with low distribution — the file is safe. Click \u201cMore info\u201d then \u201cRun anyway\u201d to proceed.',
       'sha.title':                'SHA-256 Checksums',
       'sha.sub':                  'Click the hash to select it — Copy to verify',
       'sha.copy':                 'Copy',
