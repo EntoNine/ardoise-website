@@ -952,6 +952,10 @@
     </ul>
     <div style="display:flex;align-items:center;gap:.65rem;">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+      <a href="app.html" class="btn btn-ghost">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span data-i18n="nav.open_app">Version web</span>
+      </a>
       <a href="#download" class="btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span data-i18n="nav.download_btn">Télécharger</span>
@@ -967,6 +971,7 @@
     <a href="#themes"   onclick="closeNav()" data-i18n="nav.designs">Designs</a>
     <a href="#download" onclick="closeNav()" data-i18n="nav.download">Téléchargement</a>
     <a href="#contact"  onclick="closeNav()" data-i18n="nav.contact">Contact</a>
+    <a href="app.html" data-i18n="nav.open_app">Version web</a>
   </div>
 </nav>
 
@@ -982,7 +987,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span data-i18n="hero.btn_dl">Télécharger gratuitement</span>
         </a>
-        <a href="#preview" class="btn btn-ghost btn-lg"><span data-i18n="hero.btn_preview">Voir l'aperçu</span></a>
+        <a href="app.html" class="btn btn-ghost btn-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span data-i18n="hero.btn_app">Essayer dans le navigateur</span>
+        </a>
       </div>
       <div class="hero-pills">
         <span class="pill">
@@ -1450,12 +1458,14 @@
       'nav.download':             'Téléchargement',
       'nav.download_btn':         'Télécharger',
       'nav.contact':             'Contact',
+      'nav.open_app':             'Version web',
       'hero.badge':               'Version Bêta Utilisateurs',
       'hero.h1':                  'Devis & Factures',
       'hero.h1_grad':             'sans friction.',
       'hero.desc':                'Créez, personnalisez et exportez des devis et factures professionnels en quelques clics. Gérez vos clients, suivez votre pipeline et gardez le contrôle de votre activité.',
       'hero.btn_dl':              'Télécharger gratuitement',
       'hero.btn_preview':         "Voir l'aperçu",
+      'hero.btn_app':             'Essayer dans le navigateur',
       'hero.pill_proprietary':    'Logiciel propriétaire',
       'features.label':           'Fonctionnalités',
       'features.title':           'Tout ce dont vous avez besoin',
@@ -1557,12 +1567,14 @@
       'nav.download':             'Download',
       'nav.download_btn':         'Download',
       'nav.contact':             'Contact',
+      'nav.open_app':             'Web App',
       'hero.badge':               'User Beta Version',
       'hero.h1':                  'Quotes & Invoices',
       'hero.h1_grad':             'without friction.',
       'hero.desc':                'Create, customize and export professional quotes and invoices in just a few clicks. Manage your clients, track your pipeline and stay in control of your business.',
       'hero.btn_dl':              'Download for free',
       'hero.btn_preview':         'See preview',
+      'hero.btn_app':             'Try in browser',
       'hero.pill_proprietary':    'Proprietary software',
       'features.label':           'Features',
       'features.title':           'Everything you need',

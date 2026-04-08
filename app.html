@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ardoise — Devis &amp; Factures</title>
+
+  <!-- Fonts (local) -->
+  <link rel="stylesheet" href="css/fonts/inter.css" />
+
+  <!-- Libraries (local) -->
+  <script src="js/vendor/pdf-lib.min.js"></script>
+  <script src="js/vendor/fontkit.umd.min.js"></script>
+  <script src="js/vendor/sortable.min.js"></script>
+  <script src="js/vendor/pdf.min.js"></script>
+  <script>if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/vendor/pdf.worker.min.js'</script>
+
+  <!-- App scripts (load before Alpine so stores register at alpine:init) -->
+  <script src="js/utils.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Alpine.js (local, must be last) -->
+  <script defer src="js/vendor/alpine.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/invoice.css" />
+</head>
+
+<body>
+<div class="app-layout" x-data="{ sidebarOpen: false, tabletOpen: false, disclaimerOpen: false }"
+  x-effect="
+    document.documentElement.lang = $store.settings.lang;
+    document.documentElement.classList.remove('light', 'dark');
+    if ($store.settings.colorMode !== 'auto') document.documentElement.classList.add($store.settings.colorMode);
+  "
+  @click="tabletOpen = false">
+
+<!-- ═══════════════════════ MOBILE TOPBAR ════════════════════════════════════ -->
+<header class="mobile-topbar">
+  <button class="hamburger" @click="sidebarOpen = !sidebarOpen" :aria-expanded="sidebarOpen">
+    <span class="hamburger-bar" :class="sidebarOpen && 'open'"></span>
+    <span class="hamburger-bar" :class="sidebarOpen && 'open'"></span>
+    <span class="hamburger-bar" :class="sidebarOpen && 'open'"></span>
+  </button>
+  <div class="mobile-logo">
+    <img src="icon/compact-logo.png" width="28" height="28" alt="Ardoise" style="display:block" />
+    <span>Ardoise</span>
+  </div>
+  <div class="mobile-topbar-actions" x-data>
+    <button class="hamburger" style="width:36px;height:36px" :class="$store.settings.colorMode==='dark'?'active':''"
+      @click="$store.settings.data.colorMode = $store.settings.colorMode==='dark' ? 'auto' : 'dark'; $store.settings.persist()" :title="$store.settings.colorMode==='dark' ? 'Auto' : 'Dark'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile drawer backdrop -->
+<div class="sidebar-backdrop" :class="sidebarOpen && 'visible'" @click="sidebarOpen = false"></div>
+<!-- Tablet expanded backdrop -->
+<div class="sidebar-tablet-backdrop" :class="tabletOpen && 'visible'" @click="tabletOpen = false"></div>
+
+<!-- ═══════════════════════════ SIDEBAR ══════════════════════════════════════ -->
+<aside class="sidebar" :class="(sidebarOpen && 'sidebar--open') + ' ' + (tabletOpen && 'tablet--open')" @click.stop>
+  <div class="sidebar-logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit;flex:1;min-width:0;">
+      <img src="icon/compact-logo.png" width="28" height="28" alt="Ardoise" style="display:block;flex-shrink:0;" />
+      <span class="sidebar-logo-text">Ardoise</span>
+    </a>
+    <!-- Tablet rail toggle -->
+    <button class="sidebar-rail-toggle" @click.stop="tabletOpen = !tabletOpen" :title="tabletOpen ? 'Réduire' : 'Développer'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline :points="tabletOpen ? '15 18 9 12 15 6' : '9 18 15 12 9 6'"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-section" x-data x-text="$store.i18n.t('nav')">Navigation</div>
+  <nav x-data>
+    <a class="sidebar-link" data-nav="documents" href="#/documents" @click="sidebarOpen = false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span x-text="$store.i18n.t('navDocuments')">Documents</span>
+    </a>
+    <a class="sidebar-link" data-nav="document-form" href="#/document/new" @click="sidebarOpen = false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      <span x-text="$store.i18n.t('navNouveau')">Nouveau</span>
+    </a>
+    <a class="sidebar-link" data-nav="designer" href="#/designer" @click="sidebarOpen = false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+      <span x-text="$store.i18n.t('navDesigner')">Designer</span>
+    </a>
+    <a class="sidebar-link" data-nav="settings" href="#/settings" @click="sidebarOpen = false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span x-text="$store.i18n.t('navParametres')">Paramètres</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-theme" x-data>
+    <button class="sidebar-theme-btn" :class="$store.settings.colorMode==='light' ? 'active' : ''"
+      @click="$store.settings.data.colorMode='light'; $store.settings.persist()" title="Light">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+    <button class="sidebar-theme-btn" :class="$store.settings.colorMode==='dark' ? 'active' : ''"
+      @click="$store.settings.data.colorMode='dark'; $store.settings.persist()" title="Dark">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+    <button class="sidebar-theme-btn" :class="$store.settings.colorMode==='auto' || !$store.settings.data.colorMode ? 'active' : ''"
+      @click="$store.settings.data.colorMode='auto'; $store.settings.persist()" title="Auto">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-lang" x-data>
+    <button class="sidebar-lang-btn" :class="$store.settings.data.lang==='fr' ? 'active' : ''" @click="$store.settings.data.lang='fr'; $store.settings.persist()">FR</button>
+    <span class="sidebar-lang-sep">·</span>
+    <button class="sidebar-lang-btn" :class="$store.settings.data.lang==='en' ? 'active' : ''" @click="$store.settings.data.lang='en'; $store.settings.persist()">EN</button>
+  </div>
+
+  <button class="sidebar-disclaimer" @click.stop="disclaimerOpen = true" type="button">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <strong class="sidebar-disclaimer-title" x-text="$store.i18n.t('sidebarDisclaimerTitle')"></strong>
+  </button>
+
+  <!-- Disclaimer popup -->
+  <div class="disclaimer-popup-overlay" x-show="disclaimerOpen" @click="disclaimerOpen = false"
+    x-transition:enter="disclaimer-fade-in" x-transition:leave="disclaimer-fade-out" style="display:none">
+    <div class="disclaimer-popup" @click.stop>
+      <div class="disclaimer-popup-header">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <strong x-text="$store.i18n.t('sidebarDisclaimerTitle')"></strong>
+        <button class="disclaimer-popup-close" @click="disclaimerOpen = false" type="button">✕</button>
+      </div>
+      <p x-text="$store.i18n.t('sidebarDisclaimerBody')"></p>
+    </div>
+  </div>
+
+  <div class="sidebar-version">Ardoise &copy; 2026</div>
+</aside>
+
+<!-- ═══════════════════════════ MAIN ══════════════════════════════════════════ -->
+<main class="main-content">
+
+<!-- ─────────────────────────── DOCUMENTS LIST ──────────────────────────────── -->
+<section data-section="documents" style="display:none" x-data="docsList">
+  <div class="page-header">
+    <h1 class="page-title" x-text="$store.i18n.t('pageDocuments')">Documents</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" @click="createDoc('devis')" x-text="$store.i18n.t('btnPlusDevis')">+ Devis</button>
+      <button class="btn btn-primary" @click="createDoc('facture')" x-text="$store.i18n.t('btnPlusFacture')">+ Facture</button>
+    </div>
+  </div>
+  <div class="page-body">
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs">
+      <button class="filter-tab" :class="filter==='all'&&'active'"     @click="filter='all'" x-text="$store.i18n.t('filterTous')">Tous</button>
+      <button class="filter-tab" :class="filter==='devis'&&'active'"   @click="filter='devis'" x-text="$store.i18n.t('filterDevis')">Devis</button>
+      <button class="filter-tab" :class="filter==='facture'&&'active'" @click="filter='facture'" x-text="$store.i18n.t('filterFactures')">Factures</button>
+    </div>
+
+    <div class="docs-table-wrap" x-show="docs.length > 0">
+      <table class="docs-table">
+        <thead>
+          <tr>
+            <th x-text="$store.i18n.t('colType')">Type</th>
+            <th x-text="$store.i18n.t('colNumero')">Numéro</th>
+            <th x-text="$store.i18n.t('colClient')">Client</th>
+            <th x-text="$store.i18n.t('colObjet')">Objet</th>
+            <th x-text="$store.i18n.t('colStatut')">Statut</th>
+            <th x-text="$store.i18n.t('colDate')">Date</th>
+            <th class="col-amount" x-text="$store.i18n.t('colTotalTtc')">Total TTC</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="doc in docs" :key="doc.id">
+            <tr class="clickable-row" @click="editDoc(doc.id)">
+              <td><span class="badge" :class="'badge-type-' + doc.type" x-text="doc.type === 'devis' ? $store.i18n.t('badgeDevis') : $store.i18n.t('badgeFacture')"></span></td>
+              <td class="col-mono" x-text="doc.numero || '—'"></td>
+              <td x-text="doc.client?.nom || doc.client?.entreprise || '—'"></td>
+              <td x-text="doc.objet || '—'"></td>
+              <td><span class="badge" :class="statusClass(doc)" x-text="statusLabel(doc)"></span></td>
+              <td x-text="formatDate(doc.date_creation)"></td>
+              <td class="col-amount" x-text="fmt(totauxFor(doc).ttc)"></td>
+              <td class="col-actions" @click.stop>
+                <div class="actions-cell">
+                  <button class="btn btn-icon" @click="previewDoc(doc.id)" :title="$store.i18n.t('ttipApercuPdf')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                  <button class="btn btn-icon" @click="downloadDoc(doc.id)" :title="$store.i18n.t('ttipTelechargerPdf')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </button>
+                  <button class="btn btn-icon" @click="dupDoc(doc.id)" :title="$store.i18n.t('ttipDupliquer')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                  <button class="btn btn-icon danger" @click="deleteDoc(doc.id)" :title="$store.i18n.t('ttipSupprimer')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" x-show="docs.length === 0">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p x-text="$store.i18n.t('aucunDocument')">Aucun document. Créez votre premier devis ou facture.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────── DOCUMENT FORM ───────────────────────────────── -->
+<section data-section="document-form" style="display:none" x-data="docForm">
+  <template x-if="doc">
+    <div>
+
+      <!-- Header -->
+      <div class="page-header">
+        <div class="doc-type-switch">
+          <button class="btn" :class="doc.type==='devis'?'btn-primary':'btn-secondary'" @click="switchType('devis')" x-text="$store.i18n.t('typeDevis')">Devis</button>
+          <button class="btn" :class="doc.type==='facture'?'btn-primary':'btn-secondary'" @click="switchType('facture')" x-text="$store.i18n.t('typeFacture')">Facture</button>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" @click="Router.go('documents')" x-text="$store.i18n.t('btnRetour')">← Retour</button>
+          <button class="btn btn-secondary" :disabled="pdfLoading" @click="previewPdf()">
+            <span x-show="!pdfLoading" x-text="$store.i18n.t('btnApercuPdf')">Aperçu PDF</span>
+            <span x-show="pdfLoading" x-text="$store.i18n.t('btnGeneration')">Génération…</span>
+          </button>
+          <button class="btn btn-secondary" :disabled="pdfLoading" @click="downloadPdf()" x-text="$store.i18n.t('btnPdf')">↓ PDF</button>
+          <button class="btn btn-primary" @click="saveAndBack()" x-text="$store.i18n.t('btnSauvegarder')">Sauvegarder</button>
+        </div>
+      </div>
+
+      <div class="page-body">
+      <div class="form-layout">
+        <!-- Left column: meta + client + lines -->
+        <div class="form-col-main">
+
+          <!-- Document meta -->
+          <div class="card">
+            <div class="card-title" x-text="$store.i18n.t('cardInformations')">Informations</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelNumero')">Numéro</label>
+                <input type="text" x-model="doc.numero" class="form-control" placeholder="DEV-2026-0001" />
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelStatut')">Statut</label>
+                <select x-model="doc.statut" class="form-control">
+                  <template x-for="opt in statusOptions()">
+                    <option :value="opt.v" x-text="opt.l"></option>
+                  </template>
+                </select>
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelDateEmission')">Date d'émission</label>
+                <input type="date" x-model="doc.date_creation" class="form-control" />
+              </div>
+              <div class="form-group" x-show="doc.type === 'devis'">
+                <label x-text="$store.i18n.t('labelValableJusquau')">Valable jusqu'au</label>
+                <input type="date" x-model="doc.date_validite" class="form-control" />
+              </div>
+              <div class="form-group" x-show="doc.type === 'facture'">
+                <label x-text="$store.i18n.t('labelDateEcheance')">Date d'échéance</label>
+                <input type="date" x-model="doc.date_echeance" class="form-control" />
+              </div>
+              <div class="form-group form-group--full">
+                <label x-text="$store.i18n.t('labelObjet')">Objet</label>
+                <input type="text" x-model="doc.objet" class="form-control" placeholder="Mission design — Avril 2026" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Client -->
+          <div class="card">
+            <div class="card-title" x-text="$store.i18n.t('cardClient')">Client</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelNom')">Nom</label>
+                <input type="text" x-model="doc.client.nom" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelEntreprise')">Entreprise</label>
+                <input type="text" x-model="doc.client.entreprise" class="form-control" />
+              </div>
+              <div class="form-group form-group--full">
+                <label x-text="$store.i18n.t('labelAdresse')">Adresse</label>
+                <input type="text" x-model="doc.client.adresse" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelVille')">Ville</label>
+                <input type="text" x-model="doc.client.ville" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelCodePostal')">Code postal</label>
+                <input type="text" x-model="doc.client.code_postal" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelPays')">Pays</label>
+                <input type="text" x-model="doc.client.pays" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label x-text="$store.i18n.t('labelEmail')">Email</label>
+                <input type="email" x-model="doc.client.email" class="form-control" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Lines -->
+          <div class="card">
+            <div class="card-title-row">
+              <span class="card-title" x-text="$store.i18n.t('cardLignes')">Lignes</span>
+              <div class="btn-group">
+                <button class="btn btn-secondary btn-sm" @click="addSection()" x-text="$store.i18n.t('btnSection')">+ Section</button>
+                <button class="btn btn-primary btn-sm" @click="addLigne()" x-text="$store.i18n.t('btnLigne')">+ Ligne</button>
+              </div>
+            </div>
+            <div class="lines-table-wrap">
+              <table class="lines-table">
+                <thead>
+                  <tr>
+                    <th class="col-drag"></th>
+                    <th class="col-desc" x-text="$store.i18n.t('colDescription')">Description</th>
+                    <th class="col-qty" x-text="$store.i18n.t('colQte')">Qté</th>
+                    <th class="col-unit" x-text="$store.i18n.t('colUnite')">Unité</th>
+                    <th class="col-price" x-text="$store.i18n.t('colPu')">P.U.</th>
+                    <th class="col-remise" x-text="$store.i18n.t('colRemisePct')">Remise %</th>
+                    <th class="col-total" x-text="$store.i18n.t('colTotalHt')">Total HT</th>
+                    <th class="col-actions"></th>
+                  </tr>
+                </thead>
+                <tbody id="lines-tbody">
+                  <template x-for="(ligne, idx) in doc.lignes" :key="ligne.id">
+                    <tr :class="ligne._isSection ? 'section-row' : 'line-row'">
+                      <td class="col-drag">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                      </td>
+                      <template x-if="ligne._isSection">
+                        <td class="col-desc" colspan="6">
+                          <input type="text" x-model="ligne.description" class="line-input line-section-title" :placeholder="$store.i18n.t('phTitreSection')" />
+                        </td>
+                      </template>
+                      <template x-if="!ligne._isSection">
+                        <td class="col-desc"><input type="text" x-model="ligne.description" class="line-input" :placeholder="$store.i18n.t('phDescription')" /></td>
+                      </template>
+                      <template x-if="!ligne._isSection">
+                        <td class="col-qty"><input type="number" x-model.number="ligne.quantite" class="line-input line-input--num" min="0" step="0.01" /></td>
+                      </template>
+                      <template x-if="!ligne._isSection">
+                        <td class="col-unit">
+                          <select x-model="ligne.unite" class="line-input line-input--select">
+                            <template x-for="u in units" :key="u.value">
+                              <option :value="u.value" x-text="u.label" :selected="ligne.unite === u.value"></option>
+                            </template>
+                          </select>
+                        </td>
+                      </template>
+                      <template x-if="!ligne._isSection">
+                        <td class="col-price"><input type="number" x-model.number="ligne.prix_unitaire" class="line-input line-input--num" min="0" step="0.01" /></td>
+                      </template>
+                      <template x-if="!ligne._isSection">
+                        <td class="col-remise"><input type="number" x-model.number="ligne.remise_pct" class="line-input line-input--num" min="0" max="100" step="1" /></td>
+                      </template>
+                      <template x-if="!ligne._isSection">
+                        <td class="col-total line-total" x-text="fmt(ligneTotal(ligne))"></td>
+                      </template>
+                      <td class="col-actions">
+                        <button class="btn btn-ghost btn-sm" @click="dupLigne(idx)" :title="$store.i18n.t('ttipDupliquer')">⧉</button>
+                        <button class="btn btn-ghost btn-sm danger" @click="removeLigne(idx)" :title="$store.i18n.t('ttipSupprimer')">×</button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="empty-lines" x-show="doc.lignes.length === 0" x-text="$store.i18n.t('aucuneLigne')">
+              Aucune ligne. Cliquez sur "+ Ligne" pour commencer.
+            </div>
+          </div>
+
+          <!-- Notes / Conditions / Remise -->
+          <div class="card notes-card">
+            <div class="notes-remise-row">
+              <label class="notes-remise-label" x-text="$store.i18n.t('labelRemiseGlobale')">Remise globale (%)</label>
+              <input type="number" x-model.number="doc.remise_pct" class="form-control notes-remise-input" min="0" max="100" step="0.1" />
+            </div>
+            <div class="form-group">
+              <label x-text="$store.i18n.t('labelNotes')">Notes</label>
+              <textarea x-model="doc.notes" class="form-control" rows="3" :placeholder="$store.i18n.t('phNotes')"></textarea>
+            </div>
+            <div class="form-group">
+              <label x-text="$store.i18n.t('labelConditions')">Conditions de paiement</label>
+              <textarea x-model="doc.conditions" class="form-control" rows="3" :placeholder="$store.i18n.t('phConditions')"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column: totaux + preview thumbnail -->
+        <div class="form-col-side form-sidebar">
+          <div class="card totaux-card">
+            <div class="card-title" x-text="$store.i18n.t('cardTotaux')">Totaux</div>
+            <div class="totaux-row"><span x-text="$store.i18n.t('labelSousTotal')">Sous-total</span><span x-text="fmt(totaux.sous_total)"></span></div>
+            <div class="totaux-row" x-show="totaux.remise > 0"><span x-text="$store.i18n.t('labelRemise')">Remise</span><span x-text="'−' + fmt(totaux.remise)"></span></div>
+            <div class="totaux-row" x-show="totaux.remise > 0"><span x-text="$store.i18n.t('labelHt')">HT</span><span x-text="fmt(totaux.ht)"></span></div>
+            <div class="totaux-row" x-show="totaux.tps > 0"><span>TPS</span><span x-text="fmt(totaux.tps)"></span></div>
+            <div class="totaux-row" x-show="totaux.tvq > 0"><span>TVQ</span><span x-text="fmt(totaux.tvq)"></span></div>
+            <div class="totaux-row" x-show="totaux.tva > 0"><span>TVA</span><span x-text="fmt(totaux.tva)"></span></div>
+            <div class="totaux-row totaux-total"><span x-text="$store.i18n.t('labelTotalTtc')">Total TTC</span><span x-text="fmt(totaux.ttc)"></span></div>
+          </div>
+
+          <!-- Live A4 preview (scaled down) -->
+          <div class="preview-thumb-wrap">
+            <div class="preview-thumb-label" x-text="$store.i18n.t('labelApercu')">Aperçu</div>
+            <div class="preview-thumb">
+              <div class="preview-thumb-inner" :style="pageVars">
+                <template x-if="pages[0]">
+                  <div class="a4-page invoice-page">
+
+                    <!-- Header -->
+                    <div class="inv-header" :class="'logo-' + (theme.branding.logoPosition || 'left')">
+                      <div class="inv-brand">
+                        <template x-if="theme.branding.logoUrl || $store.settings.entreprise.logo_base64">
+                          <img :src="theme.branding.logoUrl || $store.settings.entreprise.logo_base64" class="inv-logo" />
+                        </template>
+                        <div class="inv-company">
+                          <div class="inv-company-name" x-text="$store.settings.entreprise.nom || 'Mon Entreprise'"></div>
+                          <div class="inv-company-details">
+                            <span x-show="$store.settings.entreprise.adresse" x-text="$store.settings.entreprise.adresse"></span>
+                            <span x-show="$store.settings.entreprise.ville || $store.settings.entreprise.code_postal"
+                                  x-text="[$store.settings.entreprise.code_postal, $store.settings.entreprise.ville].filter(Boolean).join(' ')"></span>
+                            <span x-show="$store.settings.entreprise.email" x-text="$store.settings.entreprise.email"></span>
+                            <span x-show="$store.settings.entreprise.telephone" x-text="$store.settings.entreprise.telephone"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="inv-doc-info">
+                        <div class="inv-doc-type" x-text="doc.type === 'facture' ? (lang==='fr' ? 'FACTURE' : 'INVOICE') : (lang==='fr' ? 'DEVIS' : 'QUOTE')"></div>
+                        <div class="inv-doc-numero" x-text="doc.numero"></div>
+                        <div class="inv-doc-dates">
+                          <span x-text="(lang==='fr' ? 'Date : ' : 'Date: ') + formatDate(doc.date_creation)"></span>
+                          <span x-show="doc.date_validite" x-text="(lang==='fr' ? 'Valide jusqu\'au : ' : 'Valid until: ') + formatDate(doc.date_validite)"></span>
+                          <span x-show="doc.date_echeance" x-text="(lang==='fr' ? 'Échéance : ' : 'Due: ') + formatDate(doc.date_echeance)"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Client block -->
+                    <div class="inv-client-block">
+                      <div class="inv-client-label" x-text="lang==='fr' ? 'Destinataire' : 'Bill To'"></div>
+                      <div class="inv-client-name" x-text="doc.client.nom || (lang==='fr' ? 'Nom du client' : 'Client Name')"></div>
+                      <div class="inv-client-company" x-show="doc.client.entreprise" x-text="doc.client.entreprise"></div>
+                      <div class="inv-client-addr" x-show="clientAdresse" x-text="clientAdresse"></div>
+                      <div class="inv-client-email" x-show="doc.client.email" x-text="doc.client.email"></div>
+                    </div>
+
+                    <!-- Objet -->
+                    <div class="inv-objet" x-show="doc.objet" x-text="doc.objet"></div>
+
+                    <!-- Table -->
+                    <table class="inv-table" :class="'table-' + theme.layout.tableStyle">
+                      <thead :class="'header-' + theme.layout.headerStyle">
+                        <tr>
+                          <th class="col-desc" x-text="lang==='fr' ? 'Description' : 'Description'"></th>
+                          <th class="col-qte" x-text="lang==='fr' ? 'Qté' : 'Qty'"></th>
+                          <th class="col-pu" x-text="lang==='fr' ? 'P.U.' : 'Unit Price'"></th>
+                          <th class="col-total" x-text="lang==='fr' ? 'Total HT' : 'Subtotal'"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <template x-for="l in (pages[0] || [])" :key="l.id">
+                          <tr :class="l._isSection ? 'inv-section-row' : ''">
+                            <td class="col-desc" :colspan="l._isSection ? 4 : 1" x-text="l.description"></td>
+                            <template x-if="!l._isSection">
+                              <td class="col-qte" x-text="l.quantite"></td>
+                            </template>
+                            <template x-if="!l._isSection">
+                              <td class="col-pu" x-text="fmt(l.prix_unitaire)"></td>
+                            </template>
+                            <template x-if="!l._isSection">
+                              <td class="col-total" x-text="fmt(ligneTotal(l))"></td>
+                            </template>
+                          </tr>
+                        </template>
+                      </tbody>
+                    </table>
+
+                    <!-- Totaux -->
+                    <div class="inv-spacer"></div>
+                    <div class="inv-totaux">
+                      <div class="inv-totaux-table">
+                        <div class="inv-row">
+                          <span x-text="lang==='fr' ? 'Sous-total' : 'Subtotal'"></span>
+                          <span x-text="fmt(totaux.sous_total)"></span>
+                        </div>
+                        <div class="inv-row remise" x-show="totaux.remise > 0">
+                          <span x-text="lang==='fr' ? 'Remise' : 'Discount'"></span>
+                          <span x-text="'− ' + fmt(totaux.remise)"></span>
+                        </div>
+                        <div class="inv-row" x-show="totaux.remise > 0">
+                          <span x-text="lang==='fr' ? 'Total HT' : 'Net'"></span>
+                          <span x-text="fmt(totaux.ht)"></span>
+                        </div>
+                        <div class="inv-row" x-show="totaux.tps > 0">
+                          <span>TPS</span>
+                          <span x-text="fmt(totaux.tps)"></span>
+                        </div>
+                        <div class="inv-row" x-show="totaux.tvq > 0">
+                          <span>TVQ</span>
+                          <span x-text="fmt(totaux.tvq)"></span>
+                        </div>
+                        <div class="inv-row" x-show="totaux.tva > 0">
+                          <span>TVA</span>
+                          <span x-text="fmt(totaux.tva)"></span>
+                        </div>
+                        <div class="inv-row total-ttc">
+                          <span x-text="lang==='fr' ? 'Total TTC' : 'Total'"></span>
+                          <span x-text="fmt(totaux.ttc)"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="inv-footer" x-show="doc.notes || doc.conditions">
+                      <div class="inv-footer-section" x-show="doc.notes">
+                        <strong x-text="lang==='fr' ? 'Notes' : 'Notes'"></strong>
+                        <div x-text="doc.notes"></div>
+                      </div>
+                      <div class="inv-footer-section" x-show="doc.conditions">
+                        <strong x-text="lang==='fr' ? 'Conditions' : 'Terms'"></strong>
+                        <div x-text="doc.conditions"></div>
+                      </div>
+                    </div>
+
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /form-layout -->
+      </div><!-- /page-body -->
+    </div>
+  </template>
+
+  <!-- PDF preview modal — canvas rendered via PDF.js (no browser toolbar/download button) -->
+  <div id="pdf-preview-overlay" class="pdf-modal-overlay" style="display:none" @click.self="closePdfModal()">
+    <div class="pdf-modal">
+      <div class="pdf-modal-header">
+        <span x-text="$store.i18n.t('modalApercuPdf')">Aperçu PDF</span>
+        <!-- Zoom controls -->
+        <div class="pdf-zoom-bar">
+          <button class="btn btn-ghost btn-sm pdf-zoom-btn" @click="changePdfZoom(-10)" title="Zoom −">−</button>
+          <span class="pdf-zoom-label" x-text="pdfZoom + '%'">100%</span>
+          <button class="btn btn-ghost btn-sm pdf-zoom-btn" @click="changePdfZoom(+10)" title="Zoom +">+</button>
+          <button class="btn btn-ghost btn-sm" @click="resetPdfZoom()" title="Ajuster à la largeur">⊡</button>
+        </div>
+        <button class="btn btn-ghost" @click="closePdfModal()">✕</button>
+      </div>
+      <div id="pdf-pages-container" class="pdf-pages-container"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── DESIGNER ────────────────────────────────────── -->
+<section data-section="designer" style="display:none" x-data="designer">
+  <div class="designer-layout">
+
+    <!-- Sidebar controls -->
+    <aside class="designer-sidebar">
+      <div class="sidebar-scroller">
+
+        <!-- Presets -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('presetsBase')">Présets de base</div>
+          <div class="preset-cards">
+            <button class="preset-card" :class="themeStore.activePreset==='minimalist'&&'active'" @click="applyPreset('minimalist')" x-text="$store.i18n.t('presetMinimaliste')">Minimaliste</button>
+            <button class="preset-card" :class="themeStore.activePreset==='corporate'&&'active'" @click="applyPreset('corporate')" x-text="$store.i18n.t('presetCorporate')">Corporate</button>
+            <button class="preset-card" :class="themeStore.activePreset==='modern'&&'active'" @click="applyPreset('modern')" x-text="$store.i18n.t('presetModerne')">Moderne</button>
+          </div>
+        </div>
+
+        <!-- Saved presets -->
+        <div class="sidebar-group" x-show="themeStore.savedPresets.length > 0">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('mesDesigns')">Mes designs</div>
+          <div class="saved-list">
+            <template x-for="preset in themeStore.savedPresets" :key="preset.name">
+              <div class="saved-item">
+                <span x-text="preset.name" @click="loadSaved(preset.name)"></span>
+                <button class="btn btn-ghost btn-sm danger" @click="deleteSaved(preset.name)">×</button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Save current -->
+        <div class="sidebar-group">
+          <div class="save-row">
+            <input type="text" x-model="newPresetName" class="form-control form-control--sm" :placeholder="$store.i18n.t('phNomDesign')" @keydown.enter="savePreset()" />
+            <button class="btn btn-primary btn-sm" @click="savePreset()" :disabled="!newPresetName.trim()" x-text="$store.i18n.t('btnSauver')">Sauver</button>
+          </div>
+        </div>
+
+        <!-- Colors -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionCouleurs')">Couleurs</div>
+          <div class="color-grid">
+            <template x-for="[key, labelKey] in [['primary','couleurPrincipale'],['secondary','couleurSecondaire'],['text','couleurTexte'],['accent','couleurAccent'],['tableRowBg','couleurFondRangees']]" :key="key">
+              <div class="color-row" x-data="colorRow(key)">
+                <label class="color-label" x-text="$store.i18n.t(labelKey)"></label>
+                <div class="color-picker-inline">
+                  <input type="color" :value="value" @input="onNative($event)" class="color-native" />
+                  <input type="text" class="hex-input" :value="value" @change="onHex($event)" maxlength="7" />
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionTypographie')">Typographie</div>
+          <div class="form-group">
+            <label x-text="$store.i18n.t('labelPolicePrincipale')">Police principale</label>
+            <select x-model="theme.typography.primaryFont" class="form-control form-control--sm" @change="$store.theme.persist()">
+              <template x-for="f in ['Inter','Roboto','Open Sans','Lato','Montserrat','Poppins','Source Sans Pro','Raleway','Merriweather','Georgia']">
+                <option :value="f" x-text="f"></option>
+              </template>
+            </select>
+          </div>
+          <div class="form-group">
+            <label x-text="$store.i18n.t('labelPoliceCustom')">Police personnalisée</label>
+            <input type="text" x-model="theme.typography.customFont" class="form-control form-control--sm" placeholder="ex: Playfair Display" @input="$store.theme.persist()" />
+          </div>
+          <div class="form-group">
+            <label><span x-text="$store.i18n.t('labelTailleBase')">Taille de base</span> (<span x-text="theme.typography.baseSize"></span>px)</label>
+            <input type="range" x-model.number="theme.typography.baseSize" min="8" max="14" step="0.5" class="slider" @input="$store.theme.persist()" />
+          </div>
+          <div class="form-group">
+            <label><span x-text="$store.i18n.t('labelInterligne')">Interligne</span> (<span x-text="theme.typography.lineHeight"></span>)</label>
+            <input type="range" x-model.number="theme.typography.lineHeight" min="1.2" max="2" step="0.05" class="slider" @input="$store.theme.persist()" />
+          </div>
+        </div>
+
+        <!-- Layout -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionMiseEnPage')">Mise en page</div>
+          <div class="form-group">
+            <label><span x-text="$store.i18n.t('labelMarges')">Marges</span> (<span x-text="theme.layout.padding"></span>mm)</label>
+            <input type="range" x-model.number="theme.layout.padding" min="8" max="25" step="1" class="slider" @input="$store.theme.persist()" />
+          </div>
+          <div class="form-group">
+            <label><span x-text="$store.i18n.t('labelEspacement')">Espacement</span> (<span x-text="theme.layout.gridGap"></span>px)</label>
+            <input type="range" x-model.number="theme.layout.gridGap" min="4" max="20" step="1" class="slider" @input="$store.theme.persist()" />
+          </div>
+        </div>
+
+        <!-- Table style -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionStyleTableau')">Style tableau</div>
+          <div class="form-group">
+            <label x-text="$store.i18n.t('labelStyleLignes')">Style des lignes</label>
+            <select x-model="theme.layout.tableStyle" class="form-control form-control--sm" @change="$store.theme.persist()">
+              <option value="striped" x-text="$store.i18n.t('optLignesAlternees')">Lignes alternées</option>
+              <option value="bordered" x-text="$store.i18n.t('optBordures')">Bordures</option>
+              <option value="minimal" x-text="$store.i18n.t('optMinimal')">Minimal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label x-text="$store.i18n.t('labelStyleEntete')">Style entête</label>
+            <select x-model="theme.layout.headerStyle" class="form-control form-control--sm" @change="$store.theme.persist()">
+              <option value="filled" x-text="$store.i18n.t('optRempli')">Rempli</option>
+              <option value="underline" x-text="$store.i18n.t('optSouligne')">Souligné</option>
+              <option value="none" x-text="$store.i18n.t('optAucun')">Aucun</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Colonnes visibles -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionColonnes')">Colonnes visibles</div>
+          <div class="toggle-list">
+            <label class="toggle-item">
+              <span x-text="$store.i18n.t('colToggleUnite')">Unité</span>
+              <input type="checkbox" x-model="theme.columns.unite" @change="$store.theme.persist()" />
+            </label>
+            <label class="toggle-item">
+              <span x-text="$store.i18n.t('colToggleRemise')">Remise</span>
+              <input type="checkbox" x-model="theme.columns.remise" @change="$store.theme.persist()" />
+            </label>
+            <label class="toggle-item">
+              <span x-text="$store.i18n.t('colToggleTva')">TVA / TPS</span>
+              <input type="checkbox" x-model="theme.columns.tva" @change="$store.theme.persist()" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionLogo')">Logo</div>
+          <div class="logo-manager">
+            <div class="logo-drop-zone" :class="dragOver&&'drag-over'"
+              @dragover.prevent="dragOver=true" @dragleave="dragOver=false" @drop="handleDrop($event)">
+              <template x-if="theme.branding.logoUrl">
+                <div class="logo-preview">
+                  <img :src="theme.branding.logoUrl" class="logo-img" />
+                  <button class="btn btn-ghost btn-sm danger" @click="removeLogo()" x-text="$store.i18n.t('btnSupprimerLogo')">Supprimer</button>
+                </div>
+              </template>
+              <template x-if="!theme.branding.logoUrl">
+                <div class="logo-empty">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span x-text="$store.i18n.t('logoGlisserCliquer')">Glisser ou cliquer</span>
+                  <input type="file" accept="image/*" @change="handleFile($event)" class="logo-file-input" />
+                </div>
+              </template>
+            </div>
+            <div class="logo-pos-btns" x-show="theme.branding.logoUrl">
+              <button class="btn btn-sm" :class="theme.branding.logoPosition==='left'?'btn-primary':'btn-secondary'" @click="setPosition('left')" x-text="$store.i18n.t('logoPosGauche')">Gauche</button>
+              <button class="btn btn-sm" :class="theme.branding.logoPosition==='center'?'btn-primary':'btn-secondary'" @click="setPosition('center')" x-text="$store.i18n.t('logoPosCentre')">Centre</button>
+              <button class="btn btn-sm" :class="theme.branding.logoPosition==='right'?'btn-primary':'btn-secondary'" @click="setPosition('right')" x-text="$store.i18n.t('logoPosDroite')">Droite</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="sidebar-group sidebar-actions">
+          <div class="sidebar-group-title" x-text="$store.i18n.t('sectionActions')">Actions</div>
+          <div class="doc-type-switch" style="margin-bottom:.5rem">
+            <button class="btn btn-sm" :class="docType==='devis'?'btn-primary':'btn-secondary'" @click="docType='devis'" x-text="$store.i18n.t('typeDevis')">Devis</button>
+            <button class="btn btn-sm" :class="docType==='facture'?'btn-primary':'btn-secondary'" @click="docType='facture'" x-text="$store.i18n.t('typeFacture')">Facture</button>
+          </div>
+          <div class="zoom-row">
+            <label><span x-text="$store.i18n.t('labelZoom')">Zoom</span> <span x-text="zoom"></span>%</label>
+            <input type="range" x-model.number="zoom" min="40" max="100" step="5" class="slider" />
+          </div>
+          <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:.5rem" @click="exportPdf()" x-text="$store.i18n.t('btnPdfApercu')">↓ PDF aperçu</button>
+          <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:.4rem" @click="exportJson()" x-text="$store.i18n.t('btnExporterJson')">↓ Exporter JSON</button>
+          <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:.4rem" @click="importJson()" x-text="$store.i18n.t('btnImporterJson')">↑ Importer JSON</button>
+          <input type="file" id="import-json-input" accept=".json" style="display:none" @change="onImportFile($event)" />
+          <button class="btn btn-ghost btn-sm danger" style="width:100%;margin-top:.4rem" @click="resetTheme()" x-text="$store.i18n.t('btnReinitialiser')">Réinitialiser</button>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- A4 preview area -->
+    <div class="designer-preview-area">
+      <div class="preview-zoom-wrap">
+        <template x-for="(pageLines, pgIdx) in samplePages" :key="pgIdx">
+          <div class="a4-page invoice-page" :style="Object.assign({ zoom: zoom / 100 }, pageVars)">
+
+            <!-- Watermark brouillon (page 1, devis) -->
+            <div class="inv-watermark" x-show="pgIdx === 0 && docType === 'devis'" x-text="lang==='fr'?'BROUILLON':'DRAFT'"></div>
+
+            <!-- Mini-header pages de continuation -->
+            <template x-if="pgIdx > 0">
+              <div class="inv-cont-header">
+                <span class="inv-cont-title" x-text="(docType==='facture'?(lang==='fr'?'FACTURE':'INVOICE'):(lang==='fr'?'DEVIS':'QUOTE')) + ' ' + sampleNumero"></span>
+                <span class="inv-cont-subtitle" x-text="entreprise.nom || ''"></span>
+              </div>
+            </template>
+
+            <!-- En-tête principal (page 1 seulement) -->
+            <template x-if="pgIdx === 0">
+              <div class="inv-header" :class="'logo-' + (theme.branding.logoPosition || 'left')">
+                <div class="inv-brand">
+                  <template x-if="theme.branding.logoUrl || entreprise.logo_base64">
+                    <img :src="theme.branding.logoUrl || entreprise.logo_base64" class="inv-logo" />
+                  </template>
+                  <div class="inv-company">
+                    <div class="inv-company-name" x-text="entreprise.nom || 'Mon Entreprise'"></div>
+                    <div class="inv-company-details">
+                      <span x-show="entreprise.adresse" x-text="entreprise.adresse"></span>
+                      <span x-show="entreprise.telephone" x-text="(lang==='fr'?'Tél : ':'Tel: ') + entreprise.telephone"></span>
+                      <span x-show="entreprise.email" x-text="entreprise.email"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="inv-doc-info">
+                  <div class="inv-doc-type" x-text="docType==='facture'?(lang==='fr'?'FACTURE':'INVOICE'):(lang==='fr'?'DEVIS':'QUOTE')"></div>
+                  <div class="inv-doc-numero" x-text="sampleNumero"></div>
+                  <div class="inv-doc-dates">
+                    <span x-text="(lang==='fr'?'Date : ':'Date: ') + sampleDate"></span>
+                    <span x-text="(docType==='devis'?(lang==='fr'?'Valide jusqu\'au : ':'Valid until: '):(lang==='fr'?'Échéance : ':'Due: ')) + sampleDateValidite"></span>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- Client (page 1 seulement) -->
+            <template x-if="pgIdx === 0">
+              <div class="inv-client-block">
+                <div class="inv-client-label" x-text="lang==='fr'?'Destinataire':'Bill To'"></div>
+                <div class="inv-client-name" x-text="sampleClient.nom"></div>
+                <div class="inv-client-company" x-text="sampleClient.entreprise"></div>
+                <div class="inv-client-addr" x-text="sampleClient.adresse + ', ' + sampleClient.ville + ' ' + sampleClient.code_postal"></div>
+                <div class="inv-client-email" x-text="sampleClient.email"></div>
+              </div>
+            </template>
+
+            <!-- Objet (page 1 seulement) -->
+            <template x-if="pgIdx === 0">
+              <div class="inv-objet">
+                <strong x-text="lang==='fr'?'Objet : ':'Subject: '"></strong><span x-text="sampleObjet"></span>
+              </div>
+            </template>
+
+            <!-- Tableau -->
+            <table class="inv-table" :class="'table-' + theme.layout.tableStyle">
+              <thead :class="'header-' + theme.layout.headerStyle">
+                <tr>
+                  <th class="col-desc" x-text="lang==='fr'?'Description':'Description'"></th>
+                  <th class="col-qte" x-text="lang==='fr'?'Qté':'Qty'"></th>
+                  <template x-if="theme.columns.unite">
+                    <th class="col-unite" x-text="lang==='fr'?'Unité':'Unit'"></th>
+                  </template>
+                  <th class="col-pu" x-text="lang==='fr'?'P.U. HT':'Unit price'"></th>
+                  <template x-if="theme.columns.remise">
+                    <th class="col-rem" x-text="lang==='fr'?'Rem.':'Disc.'"></th>
+                  </template>
+                  <template x-if="theme.columns.tva">
+                    <th class="col-tva">TVA</th>
+                  </template>
+                  <th class="col-total">Total HT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="l in pageLines" :key="l.id">
+                  <tr :class="l._isSection && 'inv-section-row'">
+                    <td class="col-desc" :colspan="l._isSection ? colCount : 1" x-text="l.description || '—'"></td>
+                    <template x-if="!l._isSection">
+                      <td class="col-qte" x-text="l.quantite"></td>
+                    </template>
+                    <template x-if="!l._isSection && theme.columns.unite">
+                      <td class="col-unite" x-text="l.unite || 'h'"></td>
+                    </template>
+                    <template x-if="!l._isSection">
+                      <td class="col-pu" x-text="fmt(l.prix_unitaire)"></td>
+                    </template>
+                    <template x-if="!l._isSection && theme.columns.remise">
+                      <td class="col-rem" x-text="l.remise_pct ? l.remise_pct + '%' : '—'"></td>
+                    </template>
+                    <template x-if="!l._isSection && theme.columns.tva">
+                      <td class="col-tva" x-text="tvaLabel"></td>
+                    </template>
+                    <template x-if="!l._isSection">
+                      <td class="col-total" x-text="fmt(ligneTotal(l))"></td>
+                    </template>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+
+            <!-- Spacer (dernière page seulement) -->
+            <template x-if="pgIdx === samplePages.length - 1">
+              <div class="inv-spacer"></div>
+            </template>
+
+            <!-- Totaux (dernière page seulement) -->
+            <template x-if="pgIdx === samplePages.length - 1">
+              <div class="inv-totaux">
+                <div class="inv-totaux-table">
+                  <div class="inv-row"><span x-text="lang==='fr'?'Sous-total':'Subtotal'"></span><span x-text="fmt(sampleTotaux.sous_total)"></span></div>
+                  <div class="inv-row" x-show="sampleTotaux.remise > 0"><span x-text="(lang==='fr'?'Remise (':'Discount (') + '5%)'"></span><span x-text="'−' + fmt(sampleTotaux.remise)"></span></div>
+                  <div class="inv-row" x-show="sampleTotaux.remise > 0"><span x-text="lang==='fr'?'HT':'Before tax'"></span><span x-text="fmt(sampleTotaux.ht)"></span></div>
+                  <div class="inv-row" x-show="sampleTotaux.tps > 0"><span>TPS</span><span x-text="fmt(sampleTotaux.tps)"></span></div>
+                  <div class="inv-row" x-show="sampleTotaux.tvq > 0"><span>TVQ</span><span x-text="fmt(sampleTotaux.tvq)"></span></div>
+                  <div class="inv-row" x-show="sampleTotaux.tva > 0"><span x-text="'TVA ' + tvaLabel"></span><span x-text="fmt(sampleTotaux.tva)"></span></div>
+                  <div class="inv-row total-ttc"><span x-text="lang==='fr'?'NET À PAYER':'TOTAL DUE'"></span><span x-text="fmt(sampleTotaux.ttc)"></span></div>
+                </div>
+              </div>
+            </template>
+
+            <!-- Footer (dernière page seulement) -->
+            <template x-if="pgIdx === samplePages.length - 1">
+              <div class="inv-footer">
+                <div class="inv-footer-section"><strong x-text="lang==='fr'?'Conditions : ':'Terms: '"></strong><span x-text="sampleConditions"></span></div>
+                <div class="inv-footer-section" x-show="sampleNotes"><strong x-text="lang==='fr'?'Notes : ':'Notes: '"></strong><span x-text="sampleNotes"></span></div>
+                <div class="inv-tax-numbers">
+                  <template x-if="entreprise.numero_tps"><span x-text="'TPS : ' + entreprise.numero_tps"></span></template>
+                  <template x-if="entreprise.numero_tvq"><span x-text="'TVQ : ' + entreprise.numero_tvq"></span></template>
+                  <template x-if="entreprise.numero_tva"><span x-text="'TVA : ' + entreprise.numero_tva"></span></template>
+                </div>
+              </div>
+            </template>
+
+            <!-- Numéro de page (multi-page) -->
+            <div class="inv-page-num" x-show="samplePages.length > 1">
+              <span x-text="'Page ' + (pgIdx+1) + ' / ' + samplePages.length"></span>
+            </div>
+
+          </div>
+        </template>
+      </div>
+    </div>
+
+  </div>
+  <!-- Color picker component — used inline per color row in sidebar -->
+
+</section>
+
+<!-- ─────────────────────────── SETTINGS ────────────────────────────────────── -->
+<section data-section="settings" style="display:none" x-data="settings">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title" x-text="$store.i18n.t('pageParametres')">Paramètres</h1>
+      <p class="settings-attribution" x-text="$store.i18n.t('settingsMadeBy') + ' Antoine V-J'"></p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" @click="save()" x-text="$store.i18n.t('btnSaveSettings')">Sauvegarder</button>
+    </div>
+  </div>
+  <div class="page-body">
+
+  <div class="settings-grid">
+    <!-- Entreprise -->
+    <div class="card settings-card">
+      <div class="card-title" x-text="$store.i18n.t('cardMonEntreprise')">Mon entreprise</div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelNom')">Nom</label>
+          <input type="text" x-model="data.entreprise.nom" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelEmail')">Email</label>
+          <input type="email" x-model="data.entreprise.email" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelTelephone')">Téléphone</label>
+          <input type="tel" x-model="data.entreprise.telephone" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelSiteWeb')">Site web</label>
+          <input type="url" x-model="data.entreprise.site_web" class="form-control" />
+        </div>
+        <div class="form-group form-group--full">
+          <label x-text="$store.i18n.t('labelAdresse')">Adresse</label>
+          <input type="text" x-model="data.entreprise.adresse" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelVille')">Ville</label>
+          <input type="text" x-model="data.entreprise.ville" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelCodePostal')">Code postal</label>
+          <input type="text" x-model="data.entreprise.code_postal" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelPays')">Pays</label>
+          <input type="text" x-model="data.entreprise.pays" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelSiret')">SIRET / Numéro d'entreprise</label>
+          <input type="text" x-model="data.entreprise.siret" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label x-text="$store.i18n.t('labelNumeroTva')">Numéro TVA / TPS</label>
+          <input type="text" x-model="data.entreprise.numero_tva" class="form-control" />
+        </div>
+        <div class="form-group form-group--full">
+          <label x-text="$store.i18n.t('labelMentionsLegales')">Mentions légales</label>
+          <textarea x-model="data.entreprise.mentions_legales" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+      <!-- Logo -->
+      <div class="form-group" style="margin-top:.5rem">
+        <label x-text="$store.i18n.t('labelLogoEntreprise')">Logo de l'entreprise</label>
+        <div class="logo-upload-row">
+          <template x-if="data.entreprise.logo_base64">
+            <img :src="data.entreprise.logo_base64" class="settings-logo-preview" />
+          </template>
+          <label class="btn btn-secondary btn-sm" style="cursor:pointer">
+            <span x-text="$store.i18n.t('btnChoisirFichier')">Choisir un fichier</span>
+            <input type="file" accept="image/*" style="display:none" @change="handleLogo($event)" />
+          </label>
+          <button class="btn btn-ghost btn-sm danger" x-show="data.entreprise.logo_base64" @click="removeLogo()" x-text="$store.i18n.t('btnSupprimerLogo2')">Supprimer</button>
+      </div>
+    </div>
+
+    <!-- Taxe & langue -->
+    <div class="card settings-card">
+      <div class="card-title" x-text="$store.i18n.t('cardFiscaliteLangue')">Fiscalité &amp; Langue</div>
+      <div class="form-group">
+        <label x-text="$store.i18n.t('labelRegimeFiscal')">Régime fiscal / Zone</label>
+        <select x-model="data.taxRegimeId" class="form-control" @change="$store.settings.persist()">
+          <template x-for="group in groups" :key="group">
+            <optgroup :label="group">
+              <template x-for="regime in regimes[group]" :key="regime.id">
+                <option :value="regime.id" x-text="regime.label"></option>
+              </template>
+            </optgroup>
+          </template>
+        </select>
+      </div>
+      <!-- Custom tax fields — only shown when "Personnalisé / Custom" is selected -->
+      <div x-show="data.taxRegimeId === 'ot-custom'" class="custom-tax-fields">
+        <div class="form-group-label" x-text="$store.i18n.t('labelCustomTax')">Taxe personnalisée</div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label x-text="$store.i18n.t('labelCustomTaxLabel')">Nom de la taxe</label>
+            <input type="text" class="form-control" x-model="data.customTax.label" @input="$store.settings.persist()" placeholder="TVA, GST, Tax…" maxlength="20" />
+          </div>
+          <div class="form-group">
+            <label x-text="$store.i18n.t('labelCustomTaxRate')">Taux (%)</label>
+            <input type="number" class="form-control" x-model.number="data.customTax.taux" @input="$store.settings.persist()" min="0" max="100" step="0.001" placeholder="0" />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label x-text="$store.i18n.t('labelDevise')">Devise</label>
+        <select x-model="data.entreprise.devise" class="form-control">
+          <option value="CAD" x-text="$store.i18n.t('deviseCAD')">CAD — Dollar canadien</option>
+          <option value="USD" x-text="$store.i18n.t('deviseUSD')">USD — Dollar américain</option>
+          <option value="EUR" x-text="$store.i18n.t('deviseEUR')">EUR — Euro</option>
+          <option value="GBP" x-text="$store.i18n.t('deviseGBP')">GBP — Livre sterling</option>
+          <option value="CHF" x-text="$store.i18n.t('deviseChf')">CHF — Franc suisse</option>
+          <option value="JPY" x-text="$store.i18n.t('deviseJPY')">JPY — Yen</option>
+          <option value="AUD" x-text="$store.i18n.t('deviseAUD')">AUD — Dollar australien</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label x-text="$store.i18n.t('labelLangueDocs')">Langue des documents</label>
+        <div class="btn-group">
+          <button class="btn" :class="data.lang==='fr'?'btn-primary':'btn-secondary'" @click="data.lang='fr'; $store.settings.persist()" x-text="$store.i18n.t('langFr')">Français</button>
+          <button class="btn" :class="data.lang==='en'?'btn-primary':'btn-secondary'" @click="data.lang='en'; $store.settings.persist()" x-text="$store.i18n.t('langEn')">English</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /page-body -->
+</section>
+
+</main><!-- /main-content -->
+
+<!-- ═══════════════════════════ GLOBAL PDF MODAL ══════════════════════════════ -->
+<div id="pdf-modal" class="pdf-modal-overlay" style="display:none" @click.self="this.style.display='none'">
+  <div class="pdf-modal">
+    <div class="pdf-modal-header">
+      <span>Aperçu PDF</span>
+      <button class="btn btn-ghost" onclick="document.getElementById('pdf-modal').style.display='none'">✕</button>
+    </div>
+    <iframe src="" class="pdf-modal-iframe"></iframe>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ TOAST NOTIFICATIONS ══════════════════════════ -->
+<div class="toast-container" x-data="toasts">
+  <template x-for="t in list" :key="t.id">
+    <div class="toast" :class="'toast--' + t.type" x-text="t.msg" x-transition></div>
+  </template>
+</div>
+
+<!-- ═══════════════════════════ DESIGNER: inline color pickers ═══════════════ -->
+<!-- We handle color pickers with a simple inline approach in the designer sidebar -->
+<script>
+// Supplement: simple inline color utility for designer sidebar color rows
+// Since Alpine.data('colorPicker') with dynamic key binding is complex,
+// we wire color rows directly via store bindings in the sidebar template above.
+// The `designer.colorPicker(key)` method is available but the sidebar uses
+// direct x-model bindings to theme.colors[key] + a swatch preview div.
+
+// Extend the designer Alpine data with color key handling
+document.addEventListener('alpine:init', () => {
+  // Patch: Allow direct hex input in designer color grid
+  // Each row has a swatch + text input bound to the store
+  Alpine.data('colorRow', (key) => ({
+    get value() { return Alpine.store('theme').data.colors[key] },
+    set value(v) { Alpine.store('theme').data.colors[key] = v; Alpine.store('theme').persist() },
+    onHex(e) {
+      const v = e.target.value.startsWith('#') ? e.target.value : '#' + e.target.value
+      if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+        Alpine.store('theme').data.colors[key] = v.toLowerCase()
+        Alpine.store('theme').persist()
+      }
+    },
+    onNative(e) {
+      Alpine.store('theme').data.colors[key] = e.target.value
+      Alpine.store('theme').persist()
+    },
+  }))
+
+  // Provide newLigne / newSection globally
+  window.newLigne = () => ({
+    id: window.AWUtils.generateId(),
+    description: '', quantite: 1, prix_unitaire: 0,
+    unite: 'h', remise_pct: 0, _isSection: false,
+  })
+  window.newSection = () => ({
+    id: window.AWUtils.generateId(),
+    description: '', _isSection: true,
+    quantite: 0, prix_unitaire: 0, unite: '', remise_pct: 0,
+  })
+
+  // Patch settings store to expose regime + devise computed
+  // (already in store.js but alias here for safety)
+  window.AWUtils.addDays = (iso, n) => {
+    const d = new Date(iso); d.setDate(d.getDate() + n)
+    return d.toISOString().split('T')[0]
+  }
+})
+</script>
+
+</div><!-- /app-layout -->
+</body>
+</html>
