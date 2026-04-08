@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-adsense-account" content="ca-pub-9863175609905098">
   <title>Ardoise — Devis &amp; Factures</title>
 
   <!-- Fonts (local) -->
@@ -151,6 +152,59 @@
 
   <div class="sidebar-version">Ardoise &copy; 2026</div>
 </aside>
+
+<!-- ═══════════════════════ COOKIE CONSENT ════════════════════════════════════ -->
+<div id="cookie-banner" style="display:none" x-data="cookieConsent" x-init="init()">
+  <!-- Banner -->
+  <div class="cookie-banner" x-show="showBanner" x-transition.opacity>
+    <div class="cookie-banner-inner">
+      <div class="cookie-banner-text">
+        <strong x-text="$store.i18n.t('cookieTitle')"></strong>
+        <p x-text="$store.i18n.t('cookieBody')"></p>
+      </div>
+      <div class="cookie-banner-actions">
+        <button class="btn btn-secondary btn-sm" @click="openManage()" x-text="$store.i18n.t('cookieManage')"></button>
+        <button class="btn btn-secondary btn-sm" @click="rejectAll()" x-text="$store.i18n.t('cookieRejectAll')"></button>
+        <button class="btn btn-primary btn-sm" @click="acceptAll()" x-text="$store.i18n.t('cookieAcceptAll')"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manage modal -->
+  <div class="cookie-modal-overlay" x-show="showManage" @click.self="showManage = false" style="display:none">
+    <div class="cookie-modal">
+      <div class="cookie-modal-header">
+        <strong x-text="$store.i18n.t('cookieTitle')"></strong>
+        <button class="disclaimer-popup-close" @click="showManage = false">&#x2715;</button>
+      </div>
+
+      <!-- Necessary -->
+      <div class="cookie-row">
+        <div class="cookie-row-info">
+          <span class="cookie-row-title" x-text="$store.i18n.t('cookieNecessaryTitle')"></span>
+          <span class="cookie-row-desc" x-text="$store.i18n.t('cookieNecessaryDesc')"></span>
+        </div>
+        <div class="cookie-toggle cookie-toggle--locked">
+          <span x-text="$store.i18n.t ? '' : ''"></span>
+          <div class="toggle-track toggle-track--on"><div class="toggle-thumb"></div></div>
+        </div>
+      </div>
+
+      <!-- Ads -->
+      <div class="cookie-row">
+        <div class="cookie-row-info">
+          <span class="cookie-row-title" x-text="$store.i18n.t('cookieAdsTitle')"></span>
+          <span class="cookie-row-desc" x-text="$store.i18n.t('cookieAdsDesc')"></span>
+        </div>
+        <div class="cookie-toggle" @click="prefs.ads = !prefs.ads">
+          <div class="toggle-track" :class="prefs.ads && 'toggle-track--on'"><div class="toggle-thumb"></div></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary cookie-modal-save" @click="savePrefs()" x-text="$store.i18n.t('cookieSave')"></button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════ MAIN ══════════════════════════════════════════ -->
 <main class="main-content">
@@ -1045,6 +1099,16 @@
       </div>
     </div>
   </div>
+
+  <!-- Cookie preferences -->
+  <div class="settings-grid" style="margin-top:0">
+    <div class="card settings-card">
+      <div class="card-title" x-text="$store.i18n.t('cookieSettingsTitle')">Cookies</div>
+      <p style="font-size:12px;color:var(--color-text-muted);margin:0 0 12px" x-text="$store.i18n.t('cookieSettingsDesc')"></p>
+      <button class="btn btn-secondary" @click="$dispatch('cookie-reopen')" x-text="$store.i18n.t('cookieSettingsBtn')"></button>
+    </div>
+  </div>
+
   </div><!-- /page-body -->
 </section>
 

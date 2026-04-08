@@ -816,6 +816,72 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('toasts', () => ({
     get list() { return Toasts.list },
   }))
+
+  // ─── Cookie consent ─────────────────────────────────────────────────────────
+  Alpine.data('cookieConsent', () => ({
+    showBanner: false,
+    showManage: false,
+    prefs: { ads: false },
+
+    init() {
+      const stored = (() => { try { return JSON.parse(localStorage.getItem('ardoise-cookie-consent') || 'null') } catch(e) { return null } })()
+      if (stored === null) {
+        // First visit — show banner
+        document.getElementById('cookie-banner').style.display = ''
+        this.showBanner = true
+      } else {
+        document.getElementById('cookie-banner').style.display = ''
+        this.prefs = stored
+        this._applyPrefs()
+      }
+      // Allow other components to open the manage modal via a custom event
+      window.addEventListener('cookie-reopen', () => {
+        document.getElementById('cookie-banner').style.display = ''
+        this.showManage = true
+      })
+    },
+
+    acceptAll() {
+      this.prefs = { ads: true }
+      this._save()
+      this.showBanner = false
+      this._applyPrefs()
+    },
+
+    rejectAll() {
+      this.prefs = { ads: false }
+      this._save()
+      this.showBanner = false
+      this._applyPrefs()
+    },
+
+    openManage() {
+      this.showManage = true
+    },
+
+    savePrefs() {
+      this._save()
+      this.showBanner = false
+      this.showManage = false
+      this._applyPrefs()
+    },
+
+    _save() {
+      try { localStorage.setItem('ardoise-cookie-consent', JSON.stringify(this.prefs)) } catch(e) {}
+    },
+
+    _applyPrefs() {
+      // AdSense: only load if consented
+      if (this.prefs.ads && !document.getElementById('adsense-script')) {
+        const s = document.createElement('script')
+        s.id = 'adsense-script'
+        s.async = true
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9863175609905098'
+        s.crossOrigin = 'anonymous'
+        document.head.appendChild(s)
+      }
+    },
+  }))
 })
 
 // ─── Sortable.js drag-to-reorder for lines table ─────────────────────────────

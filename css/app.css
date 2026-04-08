@@ -162,6 +162,11 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+}
+.sidebar-logo a {
+  min-width: 0;
+  overflow: hidden;
 }
 .sidebar-logo-text {
   font-size: 16px;
@@ -293,6 +298,143 @@ input, select, textarea { font-family: inherit; }
 .disclaimer-popup-close:hover { background: var(--color-surface-2); }
 .disclaimer-popup p { margin: 0; }
 
+/* ─── COOKIE CONSENT ─────────────────────────────────── */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 700;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -4px 24px rgba(0,0,0,.12);
+  padding: 14px 20px;
+}
+.cookie-banner-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cookie-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+.cookie-banner-text strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--color-text);
+  margin-bottom: 3px;
+}
+.cookie-banner-text p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+.cookie-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.cookie-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.cookie-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: min(440px, 100%);
+  padding: 20px 22px 22px;
+}
+.cookie-modal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.cookie-modal-header strong {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+.cookie-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+}
+.cookie-row-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cookie-row-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.cookie-row-desc {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+.cookie-toggle {
+  flex-shrink: 0;
+  cursor: pointer;
+  padding-top: 1px;
+}
+.cookie-toggle--locked { cursor: default; opacity: .7; }
+.toggle-track {
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--color-border-strong);
+  position: relative;
+  transition: background .2s;
+}
+.toggle-track--on { background: var(--color-primary); }
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  transition: left .2s;
+}
+.toggle-track--on .toggle-thumb { left: 19px; }
+.cookie-modal-save {
+  margin-top: 18px;
+  width: 100%;
+  justify-content: center;
+}
+@media (max-width: 600px) {
+  .cookie-banner-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .cookie-banner-actions { width: 100%; justify-content: flex-end; }
+}
+
 .sidebar-version {
   padding: 8px 16px 14px;
   font-size: 10px;
@@ -310,14 +452,15 @@ input, select, textarea { font-family: inherit; }
   justify-content: center;
   margin-left: auto;
   flex-shrink: 0;
-  width: 26px; height: 26px;
-  border-radius: var(--radius-sm);
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
   background: transparent;
   border: 1px solid transparent;
   color: var(--color-text-faint);
   cursor: pointer;
   transition: all .15s;
 }
+.sidebar-rail-toggle svg { width: 18px; height: 18px; }
 .sidebar-rail-toggle:hover { background: var(--color-surface-2); border-color: var(--color-border); color: var(--color-text); }
 
 .sidebar-lang {
@@ -1056,6 +1199,22 @@ section[data-section="designer"] {
   .sidebar-rail-toggle { display: flex; }
   .sidebar-logo-text   { display: none; }
   .sidebar.tablet--open .sidebar-logo-text { display: block; }
+
+  /* Collapsed rail: hide the logo link, center the toggle button */
+  .sidebar:not(.tablet--open) .sidebar-logo {
+    padding: 12px 0;
+    justify-content: center;
+    gap: 0;
+  }
+  .sidebar:not(.tablet--open) .sidebar-logo > a { display: none; }
+  .sidebar:not(.tablet--open) .sidebar-rail-toggle { margin-left: 0; }
+  /* Expanded: restore normal logo layout */
+  .sidebar.tablet--open .sidebar-logo {
+    padding: 16px 20px;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  .sidebar.tablet--open .sidebar-logo > a { display: flex; }
 
   /* Collapsed: center icons, hide labels */
   .sidebar:not(.tablet--open) .sidebar-link span,
