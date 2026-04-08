@@ -197,6 +197,21 @@ window.AWI18n = {
     sidebarDisclaimerTitle: 'Stockage local',
     sidebarDisclaimerBody: 'Vos données (devis, factures, paramètres) sont enregistrées exclusivement dans le stockage local de votre navigateur. Aucune information n\u2019est transmise à des serveurs externes.',
 
+    // Cookie consent
+    cookieTitle: 'Cookies & confidentialité',
+    cookieBody: 'Nous utilisons des cookies nécessaires au fonctionnement de l\u2019application. Avec votre accord, nous activons également des cookies publicitaires (Google AdSense) pour financer le développement.',
+    cookieAcceptAll: 'Tout accepter',
+    cookieRejectAll: 'Refuser',
+    cookieManage: 'Gérer les préférences',
+    cookieSave: 'Enregistrer mes choix',
+    cookieNecessaryTitle: 'Cookies nécessaires',
+    cookieNecessaryDesc: 'Indispensables au fonctionnement de l\u2019application (stockage local, préférences). Ne peuvent pas être désactivés.',
+    cookieAdsTitle: 'Publicité (AdSense)',
+    cookieAdsDesc: 'Permettent d\u2019afficher des publicités personnalisées via Google AdSense afin de financer l\u2019application gratuitement.',
+    cookieSettingsTitle: 'Cookies & publicité',
+    cookieSettingsDesc: 'Consultez ou modifiez vos préférences de cookies à tout moment.',
+    cookieSettingsBtn: 'Gérer mes préférences de cookies',
+
     // Currency options
     deviseCAD: 'CAD — Dollar canadien',
     deviseUSD: 'USD — Dollar américain',
@@ -400,6 +415,21 @@ window.AWI18n = {
     // Sidebar disclaimer
     sidebarDisclaimerTitle: 'Local storage',
     sidebarDisclaimerBody: 'Your data (quotes, invoices, settings) is stored exclusively in your browser\u2019s local storage. No information is ever transmitted to external servers.',
+
+    // Cookie consent
+    cookieTitle: 'Cookies & privacy',
+    cookieBody: 'We use cookies essential to the application\u2019s operation. With your consent, we also enable advertising cookies (Google AdSense) to help fund development.',
+    cookieAcceptAll: 'Accept all',
+    cookieRejectAll: 'Reject all',
+    cookieManage: 'Manage preferences',
+    cookieSave: 'Save my choices',
+    cookieNecessaryTitle: 'Necessary cookies',
+    cookieNecessaryDesc: 'Required for the application to function (local storage, preferences). Cannot be disabled.',
+    cookieAdsTitle: 'Advertising (AdSense)',
+    cookieAdsDesc: 'Allow personalized ads to be shown via Google AdSense to help fund the free application.',
+    cookieSettingsTitle: 'Cookies & advertising',
+    cookieSettingsDesc: 'Review or update your cookie preferences at any time.',
+    cookieSettingsBtn: 'Manage my cookie preferences',
 
     // Currency options
     deviseCAD: 'CAD — Canadian Dollar',
